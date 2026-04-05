@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)"
+    ],
+    "ask": []
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true
+  }
+}
