@@ -1,0 +1,436 @@
+# LinkDigest 상세 개발 계획서
+
+## Context
+
+LinkDigest는 모바일에서 공유한 링크를 AI로 자동 요약하고, 주간 뉴스레터로 복습 기회를 제공하는 개인 생산성 서비스이다. PRD v1.0 (`docs/2.PRD.md`) 기반으로 Next.js 15 풀스택 앱을 처음부터 구현한다.
+
+**현재 구현 상태:** 코드 제로. 문서(PRD, CLAUDE.md, .env.example)와 Claude 개발 인프라만 존재.
+
+---
+
+## Architectural Decisions
+
+- **Routes**: `/` (랜딩/로그인), `/dashboard`, `/share`, `/settings`, `/api/*`
+- **Schema**: `public.users` (JSONB settings), `public.links` (요약 데이터 포함), RLS 필수
+- **Auth**: Supabase Auth + Google OAuth, 쿠키 기반 세션, Next.js 미들웨어
+- **State**: TanStack Query (서버 상태), react-hook-form + zod (폼), 전역 상태 라이브러리 없음
+- **Mobile First**: 390px 기준, 하단 고정 네비게이션, max-width 640px
+
+---
+
+## Phase 개요 (순차 진행)
+
+| Phase | 제목 | 핵심 산출물 | 의존성 |
+|---|---|---|---|
+| 0 | 프로젝트 초기화 & 개발 인프라 | `npm run dev` 동작하는 Next.js 15 앱 | — |
+| 1 | Supabase + Google OAuth 인증 | 로그인 → `/dashboard` 리다이렉트 | Phase 0 |
+| 2 | 링크 저장 (PWA Share Target + API) | `/share?url=...`으로 링크 저장 | Phase 1 |
+| 3 | AI 요약 파이프라인 | 크롤링 + LLM 요약 → `completed` 상태 | Phase 2 |
+| 4 | 링크 대시보드 UI | 카드 목록, 필터, 읽음 토글, 무한 스크롤 | Phase 3 |
+| 5 | 설정 페이지 | LLM / 뉴스레터 / 알림 설정 폼 | Phase 4 |
+| 6 | 주간 뉴스레터 (Vercel Cron + Resend) | 이메일 자동 발송 | Phase 5 |
+| 7 | 알림 연동 (Slack / Telegram) | 즉시 알림 + 주간 다이제스트 | Phase 6 |
+| 8 | PWA 최적화 (serwist, 오프라인) | Lighthouse PWA 90+ | Phase 7 |
+| 9 | 통합 테스트 & 배포 | Vercel 프로덕션 배포 | Phase 8 |
+
+---
+
+## Phase 0: 프로젝트 초기화 & 개발 인프라
+
+**목표:** `npm run dev`로 빈 Next.js 15 앱이 로컬에서 실행되고, shadcn/ui 컴포넌트를 사용할 수 있는 상태
+
+### 0-1. Next.js 프로젝트 부트스트랩
+- [ ] `npx create-next-app@latest` 실행 (App Router, TypeScript, TailwindCSS v4, `src/` 디렉토리, import alias `@/*`)
+- [ ] `package.json` — 기본 의존성 확인 및 정리
+- [ ] `tsconfig.json` — strict 모드 활성화, paths alias 설정
+- [ ] `src/app/layout.tsx` — 루트 레이아웃 (HTML `lang="ko"`, 다크모드 CSS 변수)
+- [ ] `src/app/page.tsx` — 임시 랜딩 페이지 ("LinkDigest" 텍스트만 표시)
+
+### 0-2. shadcn/ui 초기화
+- [ ] `npx shadcn@latest init` 실행 (New York 스타일, CSS variables)
+- [ ] `src/lib/utils.ts` — `cn()` 유틸리티 함수 (shadcn 자동 생성)
+- [ ] `components.json` — shadcn/ui 설정 파일
+- [ ] 첫 번째 shadcn 컴포넌트 설치로 동작 검증 (`button`)
+
+### 0-3. 핵심 의존성 설치
+- [ ] `@supabase/supabase-js`, `@supabase/ssr` — Supabase 클라이언트
+- [ ] `@tanstack/react-query` — 서버 상태 관리
+- [ ] `react-hook-form`, `zod`, `@hookform/resolvers` — 폼 처리
+- [ ] `resend` — 이메일 발송
+- [ ] ESLint 설정 확인
+
+### 0-4. 환경변수 및 타입
+- [ ] `.env.local` — Supabase URL/키 등 로컬 환경변수 (`.env.example` 기반)
+- [ ] `src/types/index.ts` — 공통 타입 정의 파일 (Database, User, Link 타입)
+
+### 0-5. 데모 확인
+- [ ] `npm run dev` → `localhost:3000`에서 빈 페이지 렌더링 확인
+- [ ] `npm run build` 정상 통과 확인
+
+---
+
+## Phase 1: Supabase + Google OAuth 인증
+
+**목표:** Google OAuth로 로그인하면 `/dashboard`로 리다이렉트되고, `users` 테이블에 프로필이 자동 생성되는 첫 번째 데모 가능한 슬라이스
+
+### 1-1. Supabase 프로젝트 설정 (외부)
+- [ ] Supabase 대시보드에서 프로젝트 생성
+- [ ] Google OAuth provider 활성화 (Google Cloud Console에서 OAuth Client ID 발급)
+- [ ] Redirect URL 설정: `{NEXT_PUBLIC_APP_URL}/api/auth/callback`
+
+### 1-2. DB 스키마 생성
+- [ ] `public.users` 테이블 생성 (PRD 5.1 스키마: id, email, display_name, avatar_url, llm_settings JSONB, newsletter_settings JSONB, notification_settings JSONB, timestamps)
+- [ ] `public.users` RLS 정책 적용 (`users_select_own`, `users_update_own`)
+- [ ] Auth trigger 함수: `auth.users` INSERT 시 `public.users`에 자동 INSERT
+- [ ] `supabase/migrations/001_users.sql` — 마이그레이션 파일 기록
+
+### 1-3. Supabase 클라이언트 설정
+- [ ] `src/lib/supabase/server.ts` — `createServerClient` 래퍼 (쿠키 기반 세션)
+- [ ] `src/lib/supabase/client.ts` — `createBrowserClient` 래퍼
+- [ ] `src/lib/supabase/middleware.ts` — 세션 갱신 미들웨어 헬퍼
+- [ ] `src/middleware.ts` — Next.js 미들웨어 (인증 확인, 미인증 시 `/` 리다이렉트)
+
+### 1-4. Auth API Route
+- [ ] `src/app/api/auth/callback/route.ts` — GET: Supabase OAuth 콜백 처리, code exchange 후 `/dashboard` 리다이렉트
+
+### 1-5. 랜딩 페이지 (로그인)
+- [ ] `src/app/page.tsx` — 서비스 소개 + "Google로 시작하기" 버튼
+- [ ] `src/components/auth/login-button.tsx` — Google OAuth 로그인 트리거 (`signInWithOAuth`)
+
+### 1-6. 인증 후 레이아웃
+- [ ] `src/app/(auth)/layout.tsx` — 인증된 사용자 전용 레이아웃 그룹 (세션 확인)
+- [ ] `src/app/(auth)/dashboard/page.tsx` — 임시 대시보드 ("로그인 성공! {user.email}" 표시)
+- [ ] `src/components/layout/header.tsx` — 상단 헤더 (로고 + 유저 아바타 드롭다운)
+- [ ] `src/components/layout/bottom-nav.tsx` — 모바일 하단 네비게이션 (Dashboard, Settings)
+- [ ] `src/components/auth/user-menu.tsx` — 유저 메뉴 (프로필 이미지, 로그아웃)
+
+### 1-7. 데모 확인
+- [ ] `/` 접속 → "Google로 시작하기" 클릭 → Google OAuth → `/dashboard` 리다이렉트
+- [ ] Supabase `public.users` 테이블에 레코드 생성 확인
+- [ ] 미인증 상태로 `/dashboard` 접속 시 `/`로 리다이렉트 확인
+
+---
+
+## Phase 2: 링크 저장 (PWA Share Target + API)
+
+**목표:** `/share?url=...`으로 링크를 저장하면 `links` 테이블에 `pending` 상태로 저장
+
+### 2-1. DB 스키마
+- [ ] `public.links` 테이블 생성 (PRD 5.2 스키마: id, user_id, url, title, thumbnail_url, content_type, one_line_summary, key_points JSONB, estimated_read_time, status, is_read, timestamps)
+- [ ] `public.links` RLS 정책 적용 (SELECT/INSERT/UPDATE/DELETE 모두 `auth.uid() = user_id`)
+- [ ] 인덱스 생성: `idx_links_user_id`, `idx_links_user_created`, `idx_links_user_status`, `idx_links_user_url` (unique)
+- [ ] `supabase/migrations/002_links.sql` — 마이그레이션 파일 기록
+
+### 2-2. 타입 및 검증
+- [ ] `src/types/index.ts` — `Link`, `LinkStatus`, `ContentType` 타입 추가
+- [ ] `src/lib/validators/link.ts` — zod 스키마: `createLinkSchema` (url 필수, title 선택), `updateLinkSchema`
+
+### 2-3. Links API Routes
+- [ ] `src/app/api/links/route.ts` — POST: 링크 저장 (URL 검증, 중복 체크, `pending` 상태로 INSERT)
+- [ ] `src/app/api/links/route.ts` — GET: 링크 목록 조회 (cursor 기반 페이지네이션, 필터: status, is_read)
+- [ ] `src/app/api/links/[id]/route.ts` — PATCH: 링크 수정 (`is_read` 토글)
+- [ ] `src/app/api/links/[id]/route.ts` — DELETE: 링크 삭제
+- [ ] `src/lib/api/auth.ts` — 인증 미들웨어 헬퍼 (세션에서 user_id 추출, 401 반환)
+
+### 2-4. Share Target 페이지
+- [ ] `src/app/(auth)/share/page.tsx` — URL 쿼리 파라미터 수신 (`url`, `title`, `text`), API 호출, 결과 토스트, `/dashboard` 리다이렉트
+- [ ] shadcn/ui `sonner` 또는 `toast` 컴포넌트 설치
+
+### 2-5. PWA Manifest (기초)
+- [ ] `public/manifest.json` — PWA manifest (`name`, `short_name`, `start_url`, `display`, `share_target` 설정)
+- [ ] `src/app/layout.tsx` — `<link rel="manifest">` 추가
+
+### 2-6. 데모 확인
+- [ ] 브라우저에서 `/share?url=https://example.com&title=Test` 접속 → 링크 저장 → 토스트 표시
+- [ ] Supabase `public.links` 테이블에 `status: pending` 레코드 확인
+- [ ] POST `/api/links`로 중복 URL 저장 시 에러 응답 확인
+
+---
+
+## Phase 3: AI 요약 파이프라인
+
+**목표:** 링크 저장 시 백그라운드에서 웹 크롤링 + LLM API 호출로 요약을 생성하고, `links` 레코드를 `completed` 상태로 업데이트
+
+### 3-1. 크롤링 의존성 설치
+- [ ] `cheerio`, `@mozilla/readability`, `jsdom` — 일반 링크 본문 추출
+- [ ] `youtube-transcript` — 유튜브 자막 추출
+
+### 3-2. 크롤링 모듈
+- [ ] `src/lib/scraper/index.ts` — 엔트리포인트: URL 타입 감지 (youtube vs article) 후 분기
+- [ ] `src/lib/scraper/article.ts` — Cheerio + Readability.js로 본문 추출, fallback으로 meta 태그 추출
+- [ ] `src/lib/scraper/youtube.ts` — youtube-transcript로 자막 추출, 실패 시 oEmbed API로 제목/썸네일
+- [ ] `src/lib/scraper/meta.ts` — `og:title`, `og:description`, `og:image` 추출 (fallback용)
+
+### 3-3. LLM 요약 모듈
+- [ ] `src/lib/llm/index.ts` — provider 팩토리: 사용자 설정에 따라 OpenAI / Anthropic / Google 클라이언트 생성
+- [ ] `src/lib/llm/openai.ts` — OpenAI API 호출 래퍼
+- [ ] `src/lib/llm/anthropic.ts` — Anthropic API 호출 래퍼
+- [ ] `src/lib/llm/google.ts` — Google AI API 호출 래퍼
+- [ ] `src/lib/llm/prompt.ts` — 요약 프롬프트 템플릿 (제목, 한 줄 요약, 핵심 포인트 3가지, 예상 읽기 시간)
+- [ ] `src/lib/llm/types.ts` — `SummaryResult` 타입, zod 스키마로 LLM 출력 파싱
+
+### 3-4. 요약 파이프라인 통합
+- [ ] `src/lib/summarize/pipeline.ts` — 전체 파이프라인: 크롤링 → LLM 요약 → DB 업데이트 → (알림 발송 훅)
+- [ ] `src/app/api/links/route.ts` — POST 핸들러에 요약 파이프라인 비동기 트리거 추가 (`waitUntil` 또는 background 패턴)
+
+### 3-5. 에러 처리 및 재시도
+- [ ] 크롤링 실패 시 meta fallback → 최종 실패 시 `crawl_failed` 상태
+- [ ] LLM 실패 시 1회 재시도 → 최종 실패 시 `summary_pending` 상태
+- [ ] 크롤링 timeout 10초 설정, HTTP 에러 핸들링
+
+### 3-6. LLM API 키 임시 처리
+- [ ] Settings 페이지가 아직 없으므로, Supabase에서 직접 `users.llm_settings`에 API 키 INSERT 또는 `.env.local` fallback 키 사용
+
+### 3-7. 데모 확인
+- [ ] `/share?url=https://...실제기사URL` → 저장 → 수 초 후 `status: completed` 확인
+- [ ] 유튜브 링크 저장 → 자막 기반 요약 생성 확인
+- [ ] 크롤링 불가 사이트 → `crawl_failed` 상태 확인
+
+---
+
+## Phase 4: 링크 대시보드 UI
+
+**목표:** 저장된 링크를 카드 형태로 보여주고, 읽음 토글 / 삭제 / 필터 / 무한 스크롤이 동작하는 완성된 대시보드
+
+### 4-1. TanStack Query 설정
+- [ ] `src/components/providers/query-provider.tsx` — `QueryClientProvider` 래퍼 (클라이언트 컴포넌트)
+- [ ] `src/app/(auth)/layout.tsx` — QueryProvider 적용
+- [ ] `src/lib/api/links.ts` — 링크 API 호출 함수 (fetch 래퍼: `getLinks`, `createLink`, `updateLink`, `deleteLink`)
+- [ ] `src/hooks/use-links.ts` — `useInfiniteQuery`로 링크 목록 조회, `useMutation`으로 CRUD
+
+### 4-2. shadcn/ui 컴포넌트 추가 설치
+- [ ] `card`, `badge`, `skeleton`, `tabs`, `dialog`, `dropdown-menu`, `alert-dialog` 일괄 설치
+
+### 4-3. 대시보드 페이지
+- [ ] `src/app/(auth)/dashboard/page.tsx` — 대시보드 메인 (서버 컴포넌트)
+- [ ] `src/components/dashboard/link-card-list.tsx` — 링크 카드 무한 스크롤 목록 (Intersection Observer)
+- [ ] `src/components/dashboard/link-card.tsx` — 개별 링크 카드 (제목, 한 줄 요약, 저장일, 읽음 배지, 상태 표시)
+- [ ] `src/components/dashboard/filter-tabs.tsx` — 필터 탭 (전체 / 안 읽음 / 읽음)
+- [ ] `src/components/dashboard/empty-state.tsx` — 빈 상태 안내 UI
+- [ ] `src/components/dashboard/link-card-skeleton.tsx` — 로딩 스켈레톤 (pending 상태 링크용)
+
+### 4-4. 인터랙션
+- [ ] 읽음 토글: PATCH `/api/links/[id]` 낙관적 업데이트
+- [ ] 삭제 확인 다이얼로그 + DELETE 호출
+- [ ] `src/hooks/use-links.ts` — 낙관적 업데이트 로직 (`onMutate`에서 캐시 직접 수정, `onError`에서 롤백)
+
+### 4-5. 모바일 퍼스트 스타일링
+- [ ] 모든 컴포넌트에 모바일 퍼스트 스타일 (기준 390px, `max-w-screen-sm`, 중앙 정렬)
+- [ ] 터치 타겟 최소 44px 준수
+- [ ] 다크모드 대응 (shadcn CSS 변수 기반)
+
+### 4-6. 데모 확인
+- [ ] 대시보드에서 링크 목록 표시 (요약 완료 카드 + 진행중 스켈레톤)
+- [ ] 읽음/안읽음 토글 즉각 반영 (낙관적 업데이트)
+- [ ] 필터 탭 전환 동작
+- [ ] 스크롤 끝 도달 시 다음 페이지 로드
+
+---
+
+## Phase 5: 설정 페이지
+
+**목표:** LLM API 키, 뉴스레터 발송 설정, Slack/Telegram 알림 설정을 폼으로 관리
+
+### 5-1. Settings API Routes
+- [ ] `src/app/api/settings/route.ts` — GET: `users` 테이블에서 현재 설정 조회 (llm_settings, newsletter_settings, notification_settings)
+- [ ] `src/app/api/settings/route.ts` — PUT: 설정 업데이트 (zod 검증 후 UPDATE)
+- [ ] `src/lib/validators/settings.ts` — zod 스키마: `llmSettingsSchema`, `newsletterSettingsSchema`, `notificationSettingsSchema`
+
+### 5-2. shadcn/ui 폼 컴포넌트 설치
+- [ ] `input`, `select`, `switch`, `form`, `label`, `separator` 설치
+
+### 5-3. 설정 페이지 UI
+- [ ] `src/app/(auth)/settings/page.tsx` — 설정 페이지 메인 (섹션 구분)
+- [ ] `src/components/settings/llm-settings-form.tsx` — LLM 설정: provider 선택 (OpenAI / Anthropic / Google) + API 키 입력 (비밀번호 형태)
+- [ ] `src/components/settings/newsletter-settings-form.tsx` — 뉴스레터 설정: enabled 토글, 수신 이메일, 발송 요일(select), 시간(select), 타임존
+- [ ] `src/components/settings/notification-settings-form.tsx` — 알림 설정: Slack (enabled + webhook URL), Telegram (enabled + bot token + chat ID)
+- [ ] `src/hooks/use-settings.ts` — `useQuery` / `useMutation`으로 설정 CRUD
+
+### 5-4. 폼 검증 및 UX
+- [ ] react-hook-form + zod resolver 통합
+- [ ] API 키 마스킹 표시 (저장 후 `sk-...xxxx` 형태)
+- [ ] 저장 성공/실패 토스트
+
+### 5-5. 데모 확인
+- [ ] Settings 페이지에서 LLM provider + API 키 입력 → 저장 → DB 확인
+- [ ] 뉴스레터 설정 변경 → 저장 → 재로드 후 값 유지 확인
+- [ ] Phase 3의 요약 파이프라인이 Settings에서 저장한 API 키를 실제로 사용하는지 E2E 확인
+
+---
+
+## Phase 6: 주간 뉴스레터 (Vercel Cron + Resend)
+
+**목표:** 매주 설정된 시간에 지난 7일간의 링크 요약을 이메일로 발송
+
+### 6-1. Resend 설정
+- [ ] Resend 대시보드에서 API 키 발급, 발송 도메인/이메일 설정
+- [ ] `src/lib/email/resend.ts` — Resend 클라이언트 초기화
+
+### 6-2. 이메일 템플릿
+- [ ] `src/lib/email/templates/newsletter.tsx` — React Email 기반 뉴스레터 템플릿 (링크별: 제목, 한 줄 요약, 핵심 포인트, 원본 링크 버튼, 읽음/안읽음 구분)
+- [ ] `src/lib/email/send-newsletter.ts` — 특정 사용자에게 뉴스레터 발송 함수
+
+### 6-3. Cron API Route
+- [ ] `src/app/api/cron/newsletter/route.ts` — POST: CRON_SECRET 검증 → 현재 시간에 발송 예정인 사용자 조회 → 각 사용자별 지난 7일 링크 조회 → 이메일 발송
+- [ ] `vercel.json` — cron 설정 추가 (매 시간 실행: `"0 * * * *"`)
+
+### 6-4. 뉴스레터 미리보기
+- [ ] `src/components/settings/newsletter-preview.tsx` — Settings 페이지에서 최근 링크 기반 샘플 이메일 미리보기
+
+### 6-5. 데모 확인
+- [ ] `curl -X POST /api/cron/newsletter -H "Authorization: Bearer {CRON_SECRET}"` 수동 트리거
+- [ ] 설정된 이메일로 뉴스레터 수신 확인
+- [ ] 저장된 링크가 0개인 사용자에게는 발송되지 않는 것 확인
+
+---
+
+## Phase 7: 알림 연동 (Slack / Telegram)
+
+**목표:** 링크 요약 완료 시 Slack/Telegram으로 즉시 알림, 주간 다이제스트도 메시지 발송
+
+### 7-1. 알림 모듈
+- [ ] `src/lib/notifications/index.ts` — 엔트리포인트: 사용자 설정에 따라 활성화된 채널로 알림 발송
+- [ ] `src/lib/notifications/slack.ts` — Slack Incoming Webhook 호출 (제목, 한 줄 요약, 원본 링크)
+- [ ] `src/lib/notifications/telegram.ts` — Telegram Bot API `sendMessage` 호출 (Markdown 포맷)
+- [ ] `src/lib/notifications/types.ts` — 알림 페이로드 타입 정의
+
+### 7-2. 파이프라인 통합
+- [ ] `src/lib/summarize/pipeline.ts` — 요약 완료 후 `sendNotification()` 호출 추가 (즉시 알림)
+- [ ] `src/app/api/cron/newsletter/route.ts` — 이메일 발송 후 Slack/Telegram으로도 주간 다이제스트 발송
+
+### 7-3. 데모 확인
+- [ ] 링크 저장 → 요약 완료 → Slack 채널에 메시지 수신 확인
+- [ ] 링크 저장 → 요약 완료 → Telegram 채팅에 메시지 수신 확인
+- [ ] 뉴스레터 수동 트리거 → Slack/Telegram에도 주간 다이제스트 수신 확인
+
+---
+
+## Phase 8: PWA 최적화 (serwist, 오프라인)
+
+**목표:** Lighthouse PWA 점수 90 이상, 오프라인에서 캐시된 대시보드 표시, 모바일 홈 화면 아이콘 완성
+
+### 8-1. serwist 설정
+- [ ] `serwist` 패키지 설치
+- [ ] `src/app/sw.ts` — Service Worker 정의 (serwist 기반)
+- [ ] `next.config.ts` — serwist 플러그인 통합 (`withSerwist` 래퍼)
+- [ ] 정적 에셋 프리캐싱 (App Shell), API 응답은 Network First 전략
+
+### 8-2. PWA 아이콘 및 메타데이터
+- [ ] `public/icons/icon-192x192.png` — 192x192 앱 아이콘
+- [ ] `public/icons/icon-512x512.png` — 512x512 앱 아이콘
+- [ ] `public/icons/apple-touch-icon.png` — iOS 홈 화면 아이콘
+- [ ] `public/manifest.json` — 아이콘 경로 및 share_target 최종 점검
+- [ ] `src/app/layout.tsx` — `<meta name="theme-color">`, apple-touch-icon 등 PWA 메타 태그 추가
+
+### 8-3. 설치 온보딩
+- [ ] `src/components/pwa/install-banner.tsx` — PWA 설치 유도 배너 (`beforeinstallprompt` 이벤트)
+- [ ] `src/components/pwa/share-guide.tsx` — 공유 시트 사용법 안내 (iOS Safari "홈 화면에 추가" 가이드 포함)
+
+### 8-4. 오프라인 대응
+- [ ] Service Worker에서 대시보드 HTML + 정적 에셋 캐싱
+- [ ] 오프라인 시 캐시된 대시보드 표시 (읽기 전용)
+- [ ] 오프라인 상태 감지 배너 표시
+
+### 8-5. 데모 확인
+- [ ] Chrome DevTools Lighthouse PWA 감사 → 90점 이상
+- [ ] 모바일 Chrome에서 "홈 화면에 추가" → 아이콘으로 앱 실행
+- [ ] 비행기 모드에서 캐시된 대시보드 표시 확인
+- [ ] 공유 시트에서 LinkDigest 선택 → 링크 저장 E2E 확인
+
+---
+
+## Phase 9: 통합 테스트 & 배포
+
+**목표:** 전체 기능이 Vercel 프로덕션 환경에서 정상 동작
+
+### 9-1. Vercel 배포 설정
+- [ ] Vercel 프로젝트 연결 (GitHub repo 연동)
+- [ ] 환경변수 설정 (Supabase, Resend, CRON_SECRET 등)
+- [ ] `vercel.json` — cron 설정 최종 확인
+- [ ] 프로덕션 도메인 설정 → Supabase OAuth redirect URL 업데이트
+
+### 9-2. E2E 테스트 시나리오 (수동)
+- [ ] 시나리오 1: 신규 사용자 Google 로그인 → `users` 테이블 생성 확인
+- [ ] 시나리오 2: Settings에서 LLM API 키 설정 → 저장 확인
+- [ ] 시나리오 3: 모바일 공유 시트 → 링크 저장 → 요약 완료 (30초 이내)
+- [ ] 시나리오 4: 대시보드에서 링크 목록 확인, 읽음 토글, 삭제
+- [ ] 시나리오 5: 뉴스레터 수동 트리거 → 이메일 수신
+- [ ] 시나리오 6: Slack/Telegram 알림 수신
+- [ ] 시나리오 7: PWA 설치 → 공유 시트 → 오프라인 대시보드
+
+### 9-3. 성능 및 보안 점검
+- [ ] API Rate Limiting 적용 확인 (링크 저장 50개/일)
+- [ ] RLS 정책 검증: 다른 사용자의 데이터 접근 불가 확인
+- [ ] LLM API 키가 클라이언트에 노출되지 않는지 확인 (서버 사이드 전용)
+- [ ] FCP 1.5초 이내 (모바일) 확인
+
+### 9-4. 문서 정리
+- [ ] `README.md` — 설치 및 실행 가이드 업데이트
+- [ ] `CLAUDE.md` — 최종 디렉토리 구조 및 명령어 업데이트
+- [ ] `.env.example` — 모든 환경변수 키 반영
+
+---
+
+## Phase 의존성 다이어그램
+
+```
+Phase 0 (프로젝트 초기화)
+    │
+    └── Phase 1 (Supabase + Google OAuth)
+            │
+            └── Phase 2 (링크 저장 API + Share Target)
+                    │
+                    └── Phase 3 (AI 요약 파이프라인)
+                            │
+                            └── Phase 4 (대시보드 UI)
+                                    │
+                                    └── Phase 5 (설정 페이지)
+                                            │
+                                            └── Phase 6 (주간 뉴스레터)
+                                                    │
+                                                    └── Phase 7 (Slack/Telegram 알림)
+                                                            │
+                                                            └── Phase 8 (PWA 최적화)
+                                                                    │
+                                                                    └── Phase 9 (통합 테스트 & 배포)
+```
+
+---
+
+## MVP 성공 기준
+
+| # | 기준 | 검증 방법 | 관련 Phase |
+|---|---|---|---|
+| 1 | Google OAuth 로그인/로그아웃 정상 작동 | 로그인 → 대시보드, 로그아웃 → 랜딩 | Phase 1 |
+| 2 | 모바일 공유 시트에서 링크 저장 가능 | Android Chrome PWA 공유 시트 테스트 | Phase 2, 8 |
+| 3 | AI 요약이 30초 이내 완료 | 저장 시점부터 `completed` 전환까지 측정 | Phase 3 |
+| 4 | 크롤링 성공률 90% 이상 | 다양한 URL 10개 테스트 (article + youtube) | Phase 3 |
+| 5 | 대시보드에서 목록 조회, 읽음 토글, 삭제 가능 | 각 동작 수행 후 UI + DB 일치 확인 | Phase 4 |
+| 6 | 주간 뉴스레터 자동 발송 | cron 수동 트리거 → 이메일 수신 확인 | Phase 6 |
+| 7 | Slack/Telegram 알림 정상 작동 | 링크 저장 → 즉시 알림 수신 확인 | Phase 7 |
+| 8 | FCP 1.5초 이내 (모바일) | Chrome DevTools Performance 측정 | Phase 9 |
+| 9 | Lighthouse PWA 점수 90 이상 | Chrome Lighthouse 감사 | Phase 8 |
+| 10 | 뉴스레터 발송 성공률 99% | Resend 대시보드 delivery rate 확인 | Phase 6 |
+
+---
+
+## 주요 파일 참조
+
+| 파일 경로 | 설명 | Phase |
+|---|---|---|
+| `src/lib/supabase/server.ts` | 서버 Supabase 클라이언트 | 1 |
+| `src/lib/supabase/client.ts` | 브라우저 Supabase 클라이언트 | 1 |
+| `src/middleware.ts` | 인증 미들웨어 | 1 |
+| `src/app/api/links/route.ts` | 링크 CRUD API | 2 |
+| `src/lib/scraper/index.ts` | 크롤링 엔트리포인트 | 3 |
+| `src/lib/llm/index.ts` | LLM provider 팩토리 | 3 |
+| `src/lib/summarize/pipeline.ts` | 요약 파이프라인 오케스트레이션 | 3 |
+| `src/components/dashboard/link-card-list.tsx` | 대시보드 핵심 UI | 4 |
+| `src/hooks/use-links.ts` | TanStack Query 링크 훅 | 4 |
+| `src/app/api/settings/route.ts` | 설정 API | 5 |
+| `src/app/api/cron/newsletter/route.ts` | 뉴스레터 cron | 6 |
+| `src/lib/notifications/index.ts` | 알림 엔트리포인트 | 7 |
+| `src/app/sw.ts` | Service Worker | 8 |
+| `docs/2.PRD.md` | 요구사항 원천 문서 | — |
+| `CLAUDE.md` | 코딩 컨벤션 | — |
+| `.env.example` | 환경변수 목록 | — |
