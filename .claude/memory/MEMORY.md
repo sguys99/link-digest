@@ -1,0 +1,1 @@
+- [커밋/푸시 금지](feedback_no_auto_commit.md) — 명시적 지시 없이 git commit/push 절대 금지
