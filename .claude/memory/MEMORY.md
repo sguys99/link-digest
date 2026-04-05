@@ -1,1 +1,2 @@
 - [커밋/푸시 금지](feedback_no_auto_commit.md) — 명시적 지시 없이 git commit/push 절대 금지
+- [스킬 설치 규칙](feedback_skills_install.md) — .agents 폴더 생성 금지, .claude/skills에 직접 설치
