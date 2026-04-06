@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Claude Code 스킬 파일 제외
+    ".claude/**",
   ]),
 ]);
 
