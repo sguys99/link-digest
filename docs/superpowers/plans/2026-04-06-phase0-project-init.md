@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `npm run dev`로 빈 Next.js 15 앱이 로컬에서 실행되고, shadcn/ui 컴포넌트를 사용할 수 있으며, 핵심 의존성이 설치된 개발 준비 상태를 만든다.
+**Goal:** `npm run dev`로 빈 Next.js 16 앱이 로컬에서 실행되고, shadcn/ui 컴포넌트를 사용할 수 있으며, 핵심 의존성이 설치된 개발 준비 상태를 만든다.
 
-**Architecture:** `create-next-app`으로 Next.js 15 App Router 프로젝트를 생성하고, shadcn/ui(New York 스타일)를 초기화한 뒤, Supabase/TanStack Query/react-hook-form+zod/resend 의존성을 설치한다. 환경변수 템플릿과 기본 타입 파일을 구성하여 Phase 1 진입 준비를 완료한다.
+**Architecture:** `create-next-app`으로 Next.js 16 App Router 프로젝트를 생성하고, shadcn/ui(New York 스타일)를 초기화한 뒤, Supabase/TanStack Query/react-hook-form+zod/resend 의존성을 설치한다. 환경변수 템플릿과 기본 타입 파일을 구성하여 Phase 1 진입 준비를 완료한다.
 
-**Tech Stack:** Next.js 15, TypeScript (strict), TailwindCSS v4, shadcn/ui (New York), Node.js 24
+**Tech Stack:** Next.js 16, TypeScript (strict), TailwindCSS v4, shadcn/ui (New York), Node.js 24
 
 **현재 상태:** 프로젝트 루트에 `docs/`, `.env.example`, `CLAUDE.md`, `.gitignore`만 존재. `package.json`, `src/` 없음. Node.js v24.14.1, npm v11.11.0 사용 가능.
 
@@ -16,7 +16,7 @@
 
 ```
 link-digest/
-  package.json              # Next.js 15 + 핵심 의존성
+  package.json              # Next.js 16 + 핵심 의존성
   tsconfig.json             # strict 모드, paths alias
   next.config.ts            # Next.js 설정
   components.json           # shadcn/ui 설정
@@ -37,7 +37,7 @@ link-digest/
 
 ---
 
-### Task 1: Next.js 15 프로젝트 생성
+### Task 1: Next.js 16 프로젝트 생성
 
 **Files:**
 - Create: `package.json`, `tsconfig.json`, `next.config.ts`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`
@@ -58,7 +58,7 @@ cd /tmp && npx create-next-app@latest link-digest-init \
   --yes
 ```
 
-Expected: `/tmp/link-digest-init/` 디렉토리에 Next.js 15 프로젝트 생성 완료
+Expected: `/tmp/link-digest-init/` 디렉토리에 Next.js 16 프로젝트 생성 완료
 
 - [ ] **Step 2: 생성된 프로젝트 파일을 현재 디렉토리로 복사**
 
@@ -114,7 +114,7 @@ Expected: HTTP 200 응답
 ```bash
 cd /Users/kmyu/Desktop/project/link-digest
 git add package.json package-lock.json tsconfig.json next.config.ts eslint.config.mjs postcss.config.mjs src/
-git commit -m ":tada: Next.js 15 프로젝트 초기 생성 (App Router, TypeScript, TailwindCSS v4)"
+git commit -m ":tada: Next.js 16 프로젝트 초기 생성 (App Router, TypeScript, TailwindCSS v4)"
 ```
 
 ---

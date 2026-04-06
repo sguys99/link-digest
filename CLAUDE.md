@@ -1,10 +1,10 @@
 # CLAUDE.md — LinkDigest 프로젝트 컨벤션
 
 ## 프로젝트 개요
-LinkDigest: AI 링크 요약 & 주간 뉴스레터 서비스 (Next.js 15 풀스택)
+LinkDigest: AI 링크 요약 & 주간 뉴스레터 서비스 (Next.js 16 풀스택)
 
 ## 기술 스택
-- Next.js 15 (App Router) + TypeScript
+- Next.js 16 (App Router) + TypeScript
 - TailwindCSS v4 + shadcn/ui (New York)
 - Supabase (Auth + PostgreSQL + RLS)
 - TanStack Query (서버 상태), react-hook-form + zod (폼)

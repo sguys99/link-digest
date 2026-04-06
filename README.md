@@ -6,7 +6,7 @@ AI 링크 요약 & 주간 뉴스레터 서비스
 
 ## 기술 스택
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **UI**: TailwindCSS v4 + shadcn/ui
 - **Auth**: Supabase Auth + Google OAuth
 - **DB**: Supabase (PostgreSQL + RLS)
