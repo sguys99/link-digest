@@ -46,9 +46,13 @@ export type User = {
 
 // --- Link ---
 
-export type LinkStatus = "pending" | "processing" | "completed" | "failed";
+export type LinkStatus =
+  | "pending"
+  | "completed"
+  | "summary_pending"
+  | "crawl_failed";
 
-export type ContentType = "article" | "video" | "pdf" | "other";
+export type ContentType = "article" | "youtube";
 
 export type Link = {
   id: string;
@@ -64,4 +68,27 @@ export type Link = {
   isRead: boolean;
   createdAt: string;
   updatedAt: string;
+};
+
+// --- API Response ---
+
+export type ApiErrorCode =
+  | "VALIDATION_ERROR"
+  | "UNAUTHORIZED"
+  | "NOT_FOUND"
+  | "DUPLICATE_URL"
+  | "RATE_LIMITED"
+  | "INTERNAL_ERROR";
+
+export type ApiError = {
+  error: {
+    code: ApiErrorCode;
+    message: string;
+  };
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  nextCursor: string | null;
+  hasMore: boolean;
 };
