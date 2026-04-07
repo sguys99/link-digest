@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { QueryProvider } from '@/components/providers/query-provider'
+import { PwaInstallPrompt } from '@/components/pwa/pwa-install-prompt'
+import { OfflineBanner } from '@/components/pwa/offline-banner'
 
 export default async function AuthLayout({
   children,
@@ -25,6 +27,7 @@ export default async function AuthLayout({
 
   return (
     <QueryProvider>
+      <OfflineBanner />
       <Header
         email={user.email ?? ''}
         displayName={profile?.display_name ?? null}
@@ -34,6 +37,7 @@ export default async function AuthLayout({
         {children}
       </main>
       <BottomNav />
+      <PwaInstallPrompt />
     </QueryProvider>
   )
 }
