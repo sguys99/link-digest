@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
+import { QueryProvider } from '@/components/providers/query-provider'
 
 export default async function AuthLayout({
   children,
@@ -23,7 +24,7 @@ export default async function AuthLayout({
     .single()
 
   return (
-    <>
+    <QueryProvider>
       <Header
         email={user.email ?? ''}
         displayName={profile?.display_name ?? null}
@@ -33,6 +34,6 @@ export default async function AuthLayout({
         {children}
       </main>
       <BottomNav />
-    </>
+    </QueryProvider>
   )
 }
