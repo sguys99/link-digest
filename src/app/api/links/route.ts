@@ -1,9 +1,11 @@
-import { NextRequest } from "next/server";
+import { NextRequest, after } from "next/server";
 import { requireAuth } from "@/lib/api/auth";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createLinkSchema, listLinksQuerySchema } from "@/lib/validators/link";
 import { detectContentType } from "@/lib/utils/url";
 import { toLinkResponse } from "@/lib/api/mappers";
+import { runSummaryPipeline } from "@/lib/summarize/pipeline";
 
 // POST /api/links — 링크 저장
 export async function POST(request: NextRequest) {
@@ -61,6 +63,12 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+
+  // 백그라운드에서 요약 파이프라인 실행
+  after(async () => {
+    const adminSupabase = createAdminClient();
+    await runSummaryPipeline(data.id, auth.userId, url, adminSupabase);
+  });
 
   return Response.json(toLinkResponse(data), { status: 201 });
 }
