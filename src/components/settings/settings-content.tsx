@@ -11,6 +11,7 @@ import { LlmSettingsForm } from "./llm-settings-form";
 import { NewsletterSettingsForm } from "./newsletter-settings-form";
 import { NotificationSettingsForm } from "./notification-settings-form";
 import { SettingsSkeleton } from "./settings-skeleton";
+import { NewsletterPreview } from "./newsletter-preview";
 
 export function SettingsContent() {
   const { data, isLoading, isError } = useSettings();
@@ -42,6 +43,9 @@ export function SettingsContent() {
         </CardHeader>
         <CardContent>
           <NewsletterSettingsForm defaultValues={data.newsletterSettings} />
+          <div className="mt-4 pt-4 border-t">
+            <NewsletterPreview />
+          </div>
         </CardContent>
       </Card>
 
