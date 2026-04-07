@@ -2,6 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { scrape } from "@/lib/scraper";
 import { summarize } from "@/lib/llm";
 import { resolveLlmConfig } from "@/lib/llm/config";
+import { parseNotificationSettings, sendNotification } from "@/lib/notifications";
+import type { Link } from "@/types";
 
 /**
  * 링크 요약 파이프라인: 크롤링 → LLM 요약 → DB 업데이트.
@@ -54,7 +56,7 @@ async function executePipeline(
   // 2. LLM 설정 조회
   const { data: user } = await supabase
     .from("users")
-    .select("llm_settings")
+    .select("llm_settings, notification_settings")
     .eq("id", userId)
     .single();
 
@@ -120,5 +122,32 @@ async function executePipeline(
     })
     .eq("id", linkId);
 
-  // 5. 알림 발송 훅 (Phase 7에서 구현 예정)
+  // 5. 알림 발송
+  const notificationSettings = parseNotificationSettings(
+    user?.notification_settings as Record<string, unknown> | null,
+  );
+
+  if (notificationSettings) {
+    const linkPayload: Link = {
+      id: linkId,
+      userId,
+      url,
+      title: summaryResult.title,
+      thumbnailUrl: scraped.thumbnailUrl,
+      contentType: "article",
+      oneLineSummary: summaryResult.oneLineSummary,
+      keyPoints: summaryResult.keyPoints,
+      estimatedReadTime: summaryResult.estimatedReadTime,
+      status: "completed",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const notifyResult = await sendNotification(notificationSettings, {
+      kind: "summary",
+      link: linkPayload,
+    });
+    console.log(`[SummaryPipeline] 알림 발송 결과 (linkId: ${linkId}):`, notifyResult);
+  }
 }

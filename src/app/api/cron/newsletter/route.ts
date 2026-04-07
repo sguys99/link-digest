@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { toLinkResponse } from "@/lib/api/mappers";
 import { sendNewsletter, type SendResult } from "@/lib/email/send-newsletter";
+import { parseNotificationSettings, sendNotification } from "@/lib/notifications";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
   // 뉴스레터 활성화 + 이메일 설정된 사용자 조회
   const { data: users, error: usersError } = await supabase
     .from("users")
-    .select("id, email, display_name, newsletter_settings")
+    .select("id, email, display_name, newsletter_settings, notification_settings")
     .filter("newsletter_settings->>enabled", "eq", "true")
     .not("newsletter_settings->>email", "is", null);
 
@@ -102,11 +103,34 @@ export async function GET(request: Request) {
       toLinkResponse(row as Record<string, unknown>),
     );
 
-    return sendNewsletter({
+    const userName = user.display_name ?? user.email ?? "사용자";
+
+    const emailResult = await sendNewsletter({
       email: settings.email,
-      userName: user.display_name ?? user.email ?? "사용자",
+      userName,
       links,
     });
+
+    // Slack/Telegram 다이제스트 발송
+    const notifSettings = parseNotificationSettings(
+      user.notification_settings as Record<string, unknown> | null,
+    );
+
+    if (notifSettings) {
+      const sevenDaysAgoDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const notifyResult = await sendNotification(notifSettings, {
+        kind: "digest",
+        userName,
+        links,
+        dateRange: {
+          from: sevenDaysAgoDate.toISOString().split("T")[0],
+          to: now.toISOString().split("T")[0],
+        },
+      });
+      console.log(`[newsletter-cron] 알림 발송 결과 (user=${user.id}):`, notifyResult);
+    }
+
+    return emailResult;
   });
 
   const settled = await Promise.allSettled(tasks);
