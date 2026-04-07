@@ -3,33 +3,39 @@
 export type LlmProvider = "openai" | "anthropic" | "google";
 
 export type LlmSettings = {
-  provider: LlmProvider;
-  model: string;
-  apiKey: string;
+  provider: LlmProvider | null;
+  apiKey: string | null;
+  model: string | null;
 };
-
-export type NewsletterDay =
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday";
 
 export type NewsletterSettings = {
   enabled: boolean;
-  day: NewsletterDay;
-  time: string; // "HH:mm" 형식
+  email: string | null;
+  dayOfWeek: number; // 1(월) ~ 7(일)
+  hour: number; // 0 ~ 23
+  timezone: string;
 };
 
-export type NotificationChannel = "slack" | "telegram";
+export type SlackSettings = {
+  enabled: boolean;
+  webhookUrl: string | null;
+};
+
+export type TelegramSettings = {
+  enabled: boolean;
+  botToken: string | null;
+  chatId: string | null;
+};
 
 export type NotificationSettings = {
-  enabled: boolean;
-  channel: NotificationChannel | null;
-  webhookUrl: string;
-  digestEnabled: boolean;
+  slack: SlackSettings;
+  telegram: TelegramSettings;
+};
+
+export type SettingsResponse = {
+  llmSettings: LlmSettings;
+  newsletterSettings: NewsletterSettings;
+  notificationSettings: NotificationSettings;
 };
 
 export type User = {

@@ -1,4 +1,5 @@
 import type { Link, LinkStatus, PaginatedResponse } from '@/types'
+import { handleResponse } from './fetch-utils'
 
 type GetLinksParams = {
   cursor?: string
@@ -14,16 +15,6 @@ type CreateLinkInput = {
 
 type UpdateLinkInput = {
   isRead?: boolean
-}
-
-async function handleResponse<T>(res: Response): Promise<T> {
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    const message =
-      body?.error?.message ?? `요청에 실패했습니다. (${res.status})`
-    throw new Error(message)
-  }
-  return res.json() as Promise<T>
 }
 
 export async function getLinks(
