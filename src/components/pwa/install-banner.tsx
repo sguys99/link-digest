@@ -3,25 +3,22 @@
 import { Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const DISMISS_KEY = "pwa-install-dismissed";
 const DISMISS_DAYS = 7;
 
+function getInitialDismissed() {
+  if (typeof window === "undefined") return true;
+  const raw = localStorage.getItem(DISMISS_KEY);
+  if (!raw) return false;
+  const dismissedAt = Number(raw);
+  return Date.now() - dismissedAt <= DISMISS_DAYS * 24 * 60 * 60 * 1000;
+}
+
 export function InstallBanner() {
   const { isInstallable, promptInstall } = usePwaInstall();
-  const [dismissed, setDismissed] = useState(true);
-
-  useEffect(() => {
-    const raw = localStorage.getItem(DISMISS_KEY);
-    if (!raw) {
-      setDismissed(false);
-      return;
-    }
-    const dismissedAt = Number(raw);
-    const expired = Date.now() - dismissedAt > DISMISS_DAYS * 24 * 60 * 60 * 1000;
-    setDismissed(!expired);
-  }, []);
+  const [dismissed, setDismissed] = useState(getInitialDismissed);
 
   const handleDismiss = () => {
     localStorage.setItem(DISMISS_KEY, String(Date.now()));

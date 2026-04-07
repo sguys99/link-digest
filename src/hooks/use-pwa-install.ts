@@ -7,25 +7,29 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
+function getInitialStandalone() {
+  if (typeof window === "undefined") return false;
+  return !!(
+    window.matchMedia("(display-mode: standalone)").matches ||
+    ("standalone" in navigator && (navigator as unknown as { standalone: boolean }).standalone)
+  );
+}
+
+function getInitialIOS() {
+  if (typeof window === "undefined") return false;
+  const ua = navigator.userAgent;
+  const isIOSDevice = /iPad|iPhone|iPod/.test(ua) && !("MSStream" in window);
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|Chrome/.test(ua);
+  return isIOSDevice && isSafari;
+}
+
 export function usePwaInstall() {
   const deferredPrompt = useRef<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS] = useState(getInitialIOS);
+  const [isStandalone] = useState(getInitialStandalone);
 
   useEffect(() => {
-    // 이미 설치된 상태인지 확인
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      ("standalone" in navigator && (navigator as unknown as { standalone: boolean }).standalone);
-    setIsStandalone(!!standalone);
-
-    // iOS Safari 감지
-    const ua = navigator.userAgent;
-    const isIOSDevice = /iPad|iPhone|iPod/.test(ua) && !("MSStream" in window);
-    const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|Chrome/.test(ua);
-    setIsIOS(isIOSDevice && isSafari);
-
     // Android/Chrome: beforeinstallprompt 이벤트 캡처
     const handler = (e: Event) => {
       e.preventDefault();

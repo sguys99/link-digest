@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Claude Code 스킬 파일 제외
     ".claude/**",
+    // serwist가 빌드 시 생성하는 Service Worker 파일
+    "public/sw.js",
   ]),
 ]);
 

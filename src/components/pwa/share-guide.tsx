@@ -21,7 +21,10 @@ export function ShareGuide() {
   useEffect(() => {
     if (!isIOS || isStandalone) return;
     const wasDismissed = localStorage.getItem(DISMISS_KEY);
-    if (!wasDismissed) setOpen(true);
+    if (!wasDismissed) {
+      // requestAnimationFrame으로 감싸서 동기적 setState 방지
+      requestAnimationFrame(() => setOpen(true));
+    }
   }, [isIOS, isStandalone]);
 
   const handleClose = () => {
