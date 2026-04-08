@@ -4,7 +4,7 @@ import { updateSession } from '@/lib/supabase/middleware'
 // 인증이 필요한 경로
 const protectedPaths = ['/dashboard', '/settings', '/share']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request)
   const { pathname } = request.nextUrl
 
