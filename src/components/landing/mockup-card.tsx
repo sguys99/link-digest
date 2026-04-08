@@ -18,23 +18,23 @@ type MockupCardData = {
 
 const sampleLinks: MockupCardData[] = [
   {
-    title: 'Next.js 16의 새로운 캐싱 전략',
-    summary: '서버 컴포넌트 캐싱이 더욱 세밀해졌습니다. use cache 디렉티브와 cacheLife 설정을 활용하는 방법.',
+    title: 'GPT-5 출시, 무엇이 달라졌나',
+    summary: '멀티모달 추론 능력과 100만 토큰 컨텍스트. AI 업계의 새로운 기준점을 분석합니다.',
     contentType: 'article',
     readTime: 8,
     date: '4.7',
   },
   {
-    title: '프론트엔드 개발자를 위한 AI 도구 10선',
-    summary: 'Cursor, Copilot부터 v0까지. 실무에서 생산성을 높여주는 AI 도구를 정리했습니다.',
+    title: '2026 글로벌 반도체 시장 전망',
+    summary: 'AI 칩 수요 폭증과 공급망 재편. 엔비디아, TSMC, 삼성의 전략을 비교합니다.',
     contentType: 'article',
     readTime: 12,
     date: '4.5',
     isRead: true,
   },
   {
-    title: 'React 서버 컴포넌트 Deep Dive',
-    summary: 'RSC의 동작 원리를 시각적으로 설명합니다. 클라이언트와 서버의 경계를 이해하세요.',
+    title: '연준 금리 동결, 시장 영향은?',
+    summary: '5월 FOMC 결과와 투자 전략. 채권·주식·암호화폐 시장 반응을 정리했습니다.',
     contentType: 'youtube',
     readTime: 25,
     date: '4.3',

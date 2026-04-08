@@ -1,3 +1,4 @@
+import { Github } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
 export function LandingFooter() {
@@ -13,12 +14,12 @@ export function LandingFooter() {
         </div>
         <nav className="flex gap-4">
           <a
-            href="https://github.com"
+            href="https://github.com/sguys99/link-digest"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            GitHub
+            <Github className="size-4" />
           </a>
         </nav>
       </div>
