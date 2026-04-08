@@ -1,29 +1,51 @@
+[한국어](docs/README%28kr%29.md) | English
+
 # LinkDigest
 
-AI 링크 요약 & 주간 뉴스레터 서비스
+![Version](https://img.shields.io/badge/version-v0.1.0-blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-green)
 
-모바일에서 공유한 링크를 자동으로 수집, AI 요약하고 매주 뉴스레터로 복습 기회를 제공합니다.
+**LinkDigest** is an AI-powered link curation service that instantly summarizes saved links and delivers weekly newsletter digests. Share a link from your phone — AI organizes the rest.
 
-## 기술 스택
+<p align="center">
+  <img src="img/hero.png" alt="LinkDigest Hero" width="700">
+</p>
 
-- **Framework**: Next.js 16 (App Router)
-- **UI**: TailwindCSS v4 + shadcn/ui
-- **Auth**: Supabase Auth + Google OAuth
-- **DB**: Supabase (PostgreSQL + RLS)
-- **AI**: LLM API (OpenAI / Anthropic / Google)
-- **Email**: Resend
-- **PWA**: serwist (Share Target)
-- **Deploy**: Vercel
+## Core Capabilities
 
-## 시작하기
+- **PWA Share Target** — Save links directly from your mobile browser's share menu with zero friction
+- **AI Summarization** — Get one-line summaries and key takeaways for articles and YouTube videos powered by OpenAI, Anthropic, or Google LLMs
+- **Weekly Newsletter** — Receive a curated digest of your saved links every week via email
+- **Link Dashboard** — Browse, search, and manage all your saved links with read/unread status tracking
+- **Notifications** — Stay informed through Slack or Telegram webhook integrations
+- **Google OAuth** — Sign in with your Google account in 10 seconds, no sign-up required
+
+## Technical Foundation
+
+- **Framework** — Next.js 16 (App Router) with TypeScript in strict mode
+- **Styling** — TailwindCSS v4 + shadcn/ui (New York), mobile-first design
+- **Auth & Database** — Supabase (Google OAuth + PostgreSQL with Row Level Security)
+- **AI** — Multi-provider LLM support (OpenAI / Anthropic / Google)
+- **Email** — Resend for transactional and newsletter delivery
+- **PWA** — serwist for offline support and Share Target integration
+- **Deployment** — Vercel with Cron Jobs for scheduled tasks
+
+## Getting Started
+
+Prerequisites: Node.js 20+, a Supabase project, and API keys for your preferred LLM provider.
 
 ```bash
+git clone https://github.com/sguys99/link-digest.git
+cd link-digest
 npm install
 cp .env.example .env.local
-# .env.local에 환경변수 설정
+# Configure environment variables in .env.local
 npm run dev
 ```
 
-## 문서
+The development server starts at `http://localhost:3000`.
 
-- [PRD](docs/PRD.md)
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
