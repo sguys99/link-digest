@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { LinkDigestLogo } from '@/components/logo'
 import { createClient } from '@/lib/supabase/client'
 
 export function LandingHeader() {
@@ -32,7 +33,10 @@ export function LandingHeader() {
       }`}
     >
       <div className="mx-auto flex h-14 max-w-screen-lg items-center justify-between px-4 md:px-8">
-        <span className="text-lg font-bold tracking-tight">LinkDigest</span>
+        <div className="flex items-center gap-2">
+          <LinkDigestLogo size={28} />
+          <span className="text-lg font-bold tracking-tight">LinkDigest</span>
+        </div>
         <div className="flex items-center gap-5">
           <a
             href="https://github.com/sguys99/link-digest"

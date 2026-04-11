@@ -1,11 +1,15 @@
 import { Separator } from '@/components/ui/separator'
+import { LinkDigestLogo } from '@/components/logo'
 
 export function LandingFooter() {
   return (
     <footer className="border-t">
       <div className="mx-auto flex max-w-screen-lg flex-col gap-4 px-4 py-8 md:flex-row md:items-center md:justify-between md:px-8">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-bold tracking-tight">LinkDigest</span>
+          <div className="flex items-center gap-1.5">
+            <LinkDigestLogo size={20} />
+            <span className="text-sm font-bold tracking-tight">LinkDigest</span>
+          </div>
           <Separator orientation="vertical" className="h-4" />
           <span className="text-muted-foreground text-xs">
             &copy; {new Date().getFullYear()} LinkDigest

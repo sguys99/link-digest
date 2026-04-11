@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: "LinkDigest",
   },
   icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
     apple: "/icons/apple-touch-icon.png",
   },
 };
