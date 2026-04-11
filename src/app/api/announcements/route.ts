@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await adminSupabase
     .from("announcements")
-    .insert({ title, content })
+    .insert({ title, content, is_published: true })
     .select()
     .single();
 
