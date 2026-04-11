@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
 type AuthResult =
-  | { success: true; userId: string }
+  | { success: true; userId: string; email: string }
   | { success: false; response: Response };
 
 export async function requireAuth(): Promise<AuthResult> {
@@ -21,5 +21,5 @@ export async function requireAuth(): Promise<AuthResult> {
     };
   }
 
-  return { success: true, userId: user.id };
+  return { success: true, userId: user.id, email: user.email ?? "" };
 }

@@ -77,11 +77,23 @@ export type Link = {
   updatedAt: string;
 };
 
+// --- Announcement ---
+
+export type Announcement = {
+  id: string;
+  title: string;
+  content: string;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // --- API Response ---
 
 export type ApiErrorCode =
   | "VALIDATION_ERROR"
   | "UNAUTHORIZED"
+  | "FORBIDDEN"
   | "NOT_FOUND"
   | "DUPLICATE_URL"
   | "RATE_LIMITED"

@@ -39,6 +39,12 @@ export function LandingHeader() {
         </div>
         <div className="flex items-center gap-5">
           <a
+            href="/announcements"
+            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+          >
+            공지사항
+          </a>
+          <a
             href="https://github.com/sguys99/link-digest"
             target="_blank"
             rel="noopener noreferrer"

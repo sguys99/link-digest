@@ -1,4 +1,5 @@
 import type {
+  Announcement,
   Link,
   ContentType,
   LinkStatus,
@@ -125,6 +126,24 @@ export function toSettingsDbPayload(
   }
 
   return payload;
+}
+
+// --- Link 매퍼 ---
+
+// --- Announcement 매퍼 ---
+
+/** Supabase 응답(snake_case)을 Announcement 타입(camelCase)으로 변환 */
+export function toAnnouncementResponse(
+  row: Record<string, unknown>,
+): Announcement {
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    content: row.content as string,
+    isPublished: row.is_published as boolean,
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
+  };
 }
 
 // --- Link 매퍼 ---
