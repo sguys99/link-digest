@@ -28,6 +28,16 @@ export const listLinksQuerySchema = z.object({
     .optional(),
 });
 
+// 클라이언트 폼용 (URL 입력만)
+export const addLinkFormSchema = z.object({
+  url: z
+    .url({ message: '유효한 URL 형식이 아닙니다.' })
+    .refine((val) => val.startsWith('http://') || val.startsWith('https://'), {
+      message: 'HTTP 또는 HTTPS URL만 허용됩니다.',
+    }),
+});
+
 export type CreateLinkInput = z.infer<typeof createLinkSchema>;
 export type UpdateLinkInput = z.infer<typeof updateLinkSchema>;
 export type ListLinksQuery = z.infer<typeof listLinksQuerySchema>;
+export type AddLinkFormInput = z.infer<typeof addLinkFormSchema>;

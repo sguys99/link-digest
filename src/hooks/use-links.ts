@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { getLinks, updateLink, deleteLink } from '@/lib/api/links'
+import { getLinks, createLink, updateLink, deleteLink } from '@/lib/api/links'
 import type { Link, PaginatedResponse } from '@/types'
 
 const LINKS_KEY = 'links'
@@ -63,6 +63,23 @@ export function useToggleRead() {
         }
       }
       toast.error('링크 상태 변경에 실패했습니다.')
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [LINKS_KEY] })
+    },
+  })
+}
+
+export function useAddLink() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: { url: string; title?: string }) => createLink(input),
+    onSuccess: () => {
+      toast.success('링크가 저장되었습니다!')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [LINKS_KEY] })
