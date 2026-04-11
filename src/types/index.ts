@@ -55,6 +55,7 @@ export type User = {
 export type LinkStatus =
   | "pending"
   | "completed"
+  | "basic_summary"
   | "summary_pending"
   | "crawl_failed";
 

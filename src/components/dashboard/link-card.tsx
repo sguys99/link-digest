@@ -35,8 +35,10 @@ function statusLabel(status: Link['status']) {
   switch (status) {
     case 'pending':
       return '요약 대기'
+    case 'basic_summary':
+      return '기본 요약'
     case 'summary_pending':
-      return '요약 중'
+      return 'AI 요약 대기'
     case 'crawl_failed':
       return '크롤링 실패'
     default:

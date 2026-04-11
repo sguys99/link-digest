@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { scrape } from "@/lib/scraper";
 import { summarize } from "@/lib/llm";
 import { resolveLlmConfig } from "@/lib/llm/config";
+import { extractBasicSummary } from "@/lib/summarize/basic";
 import { parseNotificationSettings, sendNotification } from "@/lib/notifications";
 import type { Link } from "@/types";
 
@@ -65,16 +66,19 @@ async function executePipeline(
   );
 
   if (!llmConfig) {
-    // LLM 키 없음 — 메타 정보만 저장
+    // LLM 키 없음 — 룰 기반 기본 요약으로 폴백
     console.warn(
-      `[SummaryPipeline] LLM 설정 없음 (userId: ${userId}), summary_pending으로 전환`,
+      `[SummaryPipeline] LLM 설정 없음 (userId: ${userId}), basic_summary로 전환`,
     );
+    const basic = extractBasicSummary(scraped);
     await supabase
       .from("links")
       .update({
         title: scraped.title,
         thumbnail_url: scraped.thumbnailUrl,
-        status: "summary_pending",
+        one_line_summary: basic.oneLineSummary,
+        estimated_read_time: basic.estimatedReadTime,
+        status: "basic_summary",
       })
       .eq("id", linkId);
     return;
@@ -96,12 +100,15 @@ async function executePipeline(
         `[SummaryPipeline] LLM 재시도 실패 (linkId: ${linkId}):`,
         secondError,
       );
-      // 메타 정보만 저장하고 summary_pending
+      // 룰 기반 기본 요약으로 폴백, LLM 재시도 가능성 표시
+      const basic = extractBasicSummary(scraped);
       await supabase
         .from("links")
         .update({
           title: scraped.title,
           thumbnail_url: scraped.thumbnailUrl,
+          one_line_summary: basic.oneLineSummary,
+          estimated_read_time: basic.estimatedReadTime,
           status: "summary_pending",
         })
         .eq("id", linkId);
