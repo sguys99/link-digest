@@ -36,7 +36,7 @@ export function AnnouncementList({
           등록된 공지사항이 없습니다.
         </p>
       ) : (
-        <div>
+        <div className="flex flex-col gap-4">
           {announcements.map((announcement) => (
             <AnnouncementCard
               key={announcement.id}

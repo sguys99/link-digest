@@ -29,6 +29,11 @@ export async function getAnnouncements(
   return handleResponse<PaginatedResponse<Announcement>>(res);
 }
 
+export async function getAnnouncement(id: string): Promise<Announcement> {
+  const res = await fetch(`/api/announcements/${id}`);
+  return handleResponse<Announcement>(res);
+}
+
 export async function createAnnouncement(
   input: CreateAnnouncementInput,
 ): Promise<Announcement> {

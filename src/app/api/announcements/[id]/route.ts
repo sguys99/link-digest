@@ -1,8 +1,54 @@
 import { NextRequest } from "next/server";
 import { requireAdmin } from "@/lib/api/admin";
+import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { updateAnnouncementSchema } from "@/lib/validators/announcement";
 import { toAnnouncementResponse } from "@/lib/api/mappers";
+
+// GET /api/announcements/[id] — 공지사항 단일 조회
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("announcements")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (data) {
+    return Response.json(toAnnouncementResponse(data));
+  }
+
+  // RLS로 조회 안 되는 경우 → 관리자면 admin client로 재조회
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isAdmin = !!user?.email && user.email === process.env.ADMIN_EMAIL;
+
+  if (isAdmin) {
+    const adminSupabase = createAdminClient();
+    const { data: adminData } = await adminSupabase
+      .from("announcements")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (adminData) {
+      return Response.json(toAnnouncementResponse(adminData));
+    }
+  }
+
+  return Response.json(
+    {
+      error: { code: "NOT_FOUND", message: "공지사항을 찾을 수 없습니다." },
+    },
+    { status: 404 },
+  );
+}
 
 // PATCH /api/announcements/[id] — 공지사항 수정 (관리자 전용)
 export async function PATCH(

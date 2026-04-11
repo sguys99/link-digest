@@ -1,8 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardAction,
+} from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,69 +49,88 @@ export function AnnouncementCard({
   );
 
   return (
-    <article className="border-b py-6 last:border-b-0">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center gap-2">
-            <h2 className="text-lg font-semibold">{announcement.title}</h2>
+    <Card className="transition-colors hover:bg-accent/50">
+      <Link href={`/announcements/${announcement.id}`} className="contents">
+        <CardHeader>
+          <CardTitle className="text-lg">{announcement.title}</CardTitle>
+          <CardDescription>
+            {formattedDate}
             {isAdmin && !announcement.isPublished && (
-              <Badge variant="secondary">임시저장</Badge>
+              <Badge variant="secondary" className="ml-2">
+                임시저장
+              </Badge>
             )}
-          </div>
-          <time className="text-muted-foreground text-sm">{formattedDate}</time>
-        </div>
-        {isAdmin && (
-          <div className="flex shrink-0 items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                updateMutation.mutate({
-                  id: announcement.id,
-                  isPublished: !announcement.isPublished,
-                })
-              }
-              disabled={updateMutation.isPending}
-            >
-              {announcement.isPublished ? "비공개" : "공개"}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsEditing(true)}
-            >
-              수정
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-destructive">
-                  삭제
+          </CardDescription>
+          {isAdmin && (
+            <CardAction>
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                className="flex items-center gap-1"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    updateMutation.mutate({
+                      id: announcement.id,
+                      isPublished: !announcement.isPublished,
+                    })
+                  }
+                  disabled={updateMutation.isPending}
+                >
+                  {announcement.isPublished ? "비공개" : "공개"}
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>공지사항 삭제</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    이 공지사항을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>취소</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => deleteMutation.mutate(announcement.id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    삭제
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
-      </div>
-      <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed">
-        {announcement.content}
-      </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                >
+                  수정
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive"
+                    >
+                      삭제
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>공지사항 삭제</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        이 공지사항을 삭제하시겠습니까? 이 작업은 되돌릴 수
+                        없습니다.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>취소</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() =>
+                          deleteMutation.mutate(announcement.id)
+                        }
+                        disabled={deleteMutation.isPending}
+                      >
+                        삭제
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </CardAction>
+          )}
+        </CardHeader>
+        <CardContent>
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+            {announcement.content}
+          </p>
+        </CardContent>
+      </Link>
 
       {isEditing && (
         <AnnouncementForm
@@ -112,6 +140,6 @@ export function AnnouncementCard({
           onOpenChange={setIsEditing}
         />
       )}
-    </article>
+    </Card>
   );
 }
