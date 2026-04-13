@@ -20,7 +20,7 @@ export const listLinksQuerySchema = z.object({
   cursor: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(50).default(20),
   status: z
-    .enum(["pending", "completed", "summary_pending", "crawl_failed"])
+    .enum(["pending", "completed", "summary_pending", "llm_failed", "crawl_failed"])
     .optional(),
   isRead: z
     .string()

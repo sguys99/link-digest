@@ -66,8 +66,24 @@ export async function POST(request: NextRequest) {
 
   // 백그라운드에서 요약 파이프라인 실행
   after(async () => {
-    const adminSupabase = createAdminClient();
-    await runSummaryPipeline(data.id, auth.userId, url, adminSupabase);
+    try {
+      const adminSupabase = createAdminClient();
+      await runSummaryPipeline(data.id, auth.userId, url, adminSupabase);
+    } catch (error) {
+      console.error(
+        `[after] 요약 파이프라인 실행 실패 (linkId: ${data.id}):`,
+        error,
+      );
+      try {
+        const fallbackSupabase = await createClient();
+        await fallbackSupabase
+          .from("links")
+          .update({ status: "crawl_failed" })
+          .eq("id", data.id);
+      } catch {
+        // 안전망 업데이트 실패 — 무시
+      }
+    }
   });
 
   return Response.json(toLinkResponse(data), { status: 201 });

@@ -6,6 +6,14 @@ import { extractBasicSummary } from "@/lib/summarize/basic";
 import { parseNotificationSettings, sendNotification } from "@/lib/notifications";
 import type { Link } from "@/types";
 
+/** AI SDK 에러의 isRetryable 속성으로 재시도 가능 여부 판별 */
+function shouldRetry(error: unknown): boolean {
+  if (typeof error === "object" && error !== null && "isRetryable" in error) {
+    return (error as { isRetryable: boolean }).isRetryable;
+  }
+  return true;
+}
+
 /**
  * 링크 요약 파이프라인: 크롤링 → LLM 요약 → DB 업데이트.
  * after() 콜백에서 호출되며, 모든 에러를 내부적으로 처리한다.
@@ -84,11 +92,31 @@ async function executePipeline(
     return;
   }
 
-  // 3. LLM 요약 (1회 재시도)
+  // 3. LLM 요약 (재시도 가능한 에러만 1회 재시도)
   let summaryResult;
   try {
     summaryResult = await summarize(scraped, url, llmConfig);
   } catch (firstError: unknown) {
+    if (!shouldRetry(firstError)) {
+      // 인증(401), 권한(403), 잘못된 요청(400) 등 — 재시도 무의미
+      console.error(
+        `[SummaryPipeline] LLM 비재시도 에러 (linkId: ${linkId}):`,
+        firstError,
+      );
+      const basic = extractBasicSummary(scraped);
+      await supabase
+        .from("links")
+        .update({
+          title: scraped.title,
+          thumbnail_url: scraped.thumbnailUrl,
+          one_line_summary: basic.oneLineSummary,
+          estimated_read_time: basic.estimatedReadTime,
+          status: "llm_failed",
+        })
+        .eq("id", linkId);
+      return;
+    }
+
     console.warn(
       `[SummaryPipeline] LLM 1차 시도 실패 (linkId: ${linkId}), 재시도 중:`,
       firstError,
@@ -100,7 +128,6 @@ async function executePipeline(
         `[SummaryPipeline] LLM 재시도 실패 (linkId: ${linkId}):`,
         secondError,
       );
-      // 룰 기반 기본 요약으로 폴백, LLM 재시도 가능성 표시
       const basic = extractBasicSummary(scraped);
       await supabase
         .from("links")

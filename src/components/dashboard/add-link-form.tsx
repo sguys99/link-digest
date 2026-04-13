@@ -34,6 +34,7 @@ export function AddLinkForm({
   })
 
   function onSubmit(data: AddLinkFormInput) {
+    if (addLink.isPending) return
     addLink.mutate(
       { url: data.url },
       {
@@ -80,7 +81,7 @@ export function AddLinkForm({
         <Button
           type="submit"
           disabled={addLink.isPending}
-          className={isInline ? '' : 'w-full'}
+          className={isInline ? 'rounded-full' : 'w-full'}
         >
           {addLink.isPending ? (
             <Loader2 className="size-4 animate-spin" />

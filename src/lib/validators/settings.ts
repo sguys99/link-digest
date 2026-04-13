@@ -1,11 +1,31 @@
 import { z } from "zod";
+import { isMaskedValue } from "@/lib/api/mappers";
+
+// provider별 API 키 접두사
+const API_KEY_PREFIXES: Partial<Record<string, string>> = {
+  anthropic: "sk-ant-",
+  openai: "sk-",
+};
 
 // LLM 설정
-export const llmSettingsSchema = z.object({
-  provider: z.enum(["openai", "anthropic", "google"]).nullable(),
-  apiKey: z.string().nullable(),
-  model: z.string().max(100).nullable(),
-});
+export const llmSettingsSchema = z
+  .object({
+    provider: z.enum(["openai", "anthropic", "google"]).nullable(),
+    apiKey: z.string().nullable(),
+    model: z.string().max(100).nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.apiKey || !data.provider || isMaskedValue(data.apiKey)) return;
+
+    const prefix = API_KEY_PREFIXES[data.provider];
+    if (prefix && !data.apiKey.startsWith(prefix)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["apiKey"],
+        message: `${data.provider} API 키는 '${prefix}'로 시작해야 합니다.`,
+      });
+    }
+  });
 
 // 뉴스레터 설정
 export const newsletterSettingsSchema = z.object({

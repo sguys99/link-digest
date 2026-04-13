@@ -57,6 +57,7 @@ export type LinkStatus =
   | "completed"
   | "basic_summary"
   | "summary_pending"
+  | "llm_failed"
   | "crawl_failed";
 
 export type ContentType = "article" | "youtube";

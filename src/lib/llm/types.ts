@@ -4,8 +4,8 @@ import { z } from "zod";
 export const summaryResultSchema = z.object({
   title: z.string(),
   oneLineSummary: z.string(),
-  keyPoints: z.array(z.string()).length(3),
-  estimatedReadTime: z.number().int().min(1),
+  keyPoints: z.array(z.string()),
+  estimatedReadTime: z.number().describe("예상 읽기 시간 (분 단위, 정수)"),
 });
 
 export type SummaryResult = z.infer<typeof summaryResultSchema>;

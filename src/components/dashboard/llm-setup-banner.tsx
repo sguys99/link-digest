@@ -22,7 +22,7 @@ export function LlmSetupBanner() {
         <p className="flex-1 text-sm text-foreground">
           <span className="font-semibold">AI 요약 기능</span>을 사용하려면 LLM API를 설정해주세요.
         </p>
-        <Button asChild size="sm">
+        <Button asChild size="sm" className="rounded-full">
           <Link href="/settings">설정하기</Link>
         </Button>
       </div>

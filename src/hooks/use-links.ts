@@ -23,6 +23,12 @@ export function useLinks(filter: LinksFilter = {}) {
       getLinks({ cursor: pageParam, limit: PAGE_LIMIT, isRead: filter.isRead }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    refetchInterval: (query) => {
+      const hasPending = query.state.data?.pages.some((page) =>
+        page.data.some((link) => link.status === 'pending'),
+      )
+      return hasPending ? 3000 : false
+    },
   })
 }
 
