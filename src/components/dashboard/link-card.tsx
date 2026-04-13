@@ -57,13 +57,13 @@ export function LinkCard({ link, onToggleRead, onDelete }: LinkCardProps) {
       className="block no-underline"
     >
       <Card
-        className={`gap-3 py-3 transition-opacity ${link.isRead ? 'opacity-60' : ''}`}
+        className={`gap-1.5 py-3 transition-opacity ${link.isRead ? 'opacity-60' : ''}`}
       >
-        <CardHeader className="px-4">
+        <CardHeader className="relative px-4 pr-12">
           <CardTitle className="line-clamp-2 text-sm font-medium">
             {link.title ?? link.url}
           </CardTitle>
-          <CardAction>
+          <CardAction className="absolute right-2 top-0">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -121,7 +121,7 @@ export function LinkCard({ link, onToggleRead, onDelete }: LinkCardProps) {
           </CardContent>
         )}
 
-        <CardFooter className="flex-wrap gap-2 px-4">
+        <CardFooter className="flex-wrap gap-2 px-4 pt-1">
           <Badge variant="secondary" className="text-xs">
             {link.contentType === 'youtube' ? 'YouTube' : '아티클'}
           </Badge>
