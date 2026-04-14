@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,6 +20,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { llmSettingsSchema, type LlmSettingsInput } from "@/lib/validators/settings";
 import { useUpdateSettings } from "@/hooks/use-settings";
 import type { LlmSettings } from "@/types";
@@ -35,6 +46,7 @@ type Props = {
 
 export function LlmSettingsForm({ defaultValues }: Props) {
   const { mutate, isPending } = useUpdateSettings();
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   const form = useForm<LlmSettingsInput>({
     resolver: zodResolver(llmSettingsSchema),
@@ -49,6 +61,19 @@ export function LlmSettingsForm({ defaultValues }: Props) {
 
   function onSubmit(data: LlmSettingsInput) {
     mutate({ llmSettings: data });
+  }
+
+  function handleReset() {
+    const resetValues = { provider: null, apiKey: null, model: null };
+    mutate(
+      { llmSettings: resetValues },
+      {
+        onSuccess: () => {
+          form.reset(resetValues);
+          setResetDialogOpen(false);
+        },
+      },
+    );
   }
 
   return (
@@ -128,10 +153,42 @@ export function LlmSettingsForm({ defaultValues }: Props) {
           )}
         />
 
-        <Button type="submit" disabled={isPending} className="w-full">
-          {isPending ? "저장 중..." : "저장"}
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit" disabled={isPending} className="flex-1">
+            {isPending ? "저장 중..." : "저장"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isPending || !defaultValues.provider}
+            onClick={() => setResetDialogOpen(true)}
+            className="flex-1"
+          >
+            설정 해제
+          </Button>
+        </div>
       </form>
+
+      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>LLM 설정을 초기화하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription>
+              AI 제공자, API 키, 모델 설정이 모두 삭제됩니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isPending}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleReset}
+              disabled={isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isPending ? "초기화 중..." : "초기화"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Form>
   );
 }
