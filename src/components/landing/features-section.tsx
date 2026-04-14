@@ -56,7 +56,7 @@ const features: { icon: () => ReactNode; title: string; description: string }[] 
 export function FeaturesSection() {
   return (
     <section className="py-24 md:py-32">
-      <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+      <div className="mx-auto max-w-[900px] px-10 md:px-8">
         <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">
           왜 LinkDigest인가요?
         </h2>
@@ -68,7 +68,7 @@ export function FeaturesSection() {
               className="gap-1.5 py-6 transition-transform duration-200 hover:-translate-y-1"
             >
               <CardHeader className="px-6">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center gap-3 -ml-5">
                   <div className="text-foreground shrink-0">
                     <feature.icon />
                   </div>
@@ -78,7 +78,7 @@ export function FeaturesSection() {
                 </div>
               </CardHeader>
               <CardContent className="px-6">
-                <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
+                <p className="text-muted-foreground whitespace-pre-line text-center text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </CardContent>
