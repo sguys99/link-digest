@@ -23,6 +23,7 @@
     "skill-creator@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
     "supabase@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true
   }
 }

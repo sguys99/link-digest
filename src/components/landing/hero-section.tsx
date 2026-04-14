@@ -21,8 +21,9 @@ export function HeroSection() {
             </h1>
 
             <p className="text-muted-foreground mx-auto max-w-md text-lg md:mx-0">
-              모바일 공유 한 번이면 저장 완료. AI가 핵심을 요약하고, 매주
-              뉴스레터로 복습하세요.
+              모바일 공유 한 번이면 저장완료.
+              <br />
+              AI로 핵심을 요약하고, 뉴스레터로 복습하세요.
             </p>
 
             <div className="mx-auto max-w-xs space-y-3 md:mx-0">
