@@ -14,7 +14,7 @@ export function AppMockupSection() {
         </div>
 
         {/* 브라우저 프레임 목업 */}
-        <div className="mx-auto mt-12 max-w-2xl overflow-hidden rounded-xl border shadow-lg">
+        <div className="mx-auto mt-12 max-w-[85%] md:max-w-xl overflow-hidden rounded-xl border shadow-lg">
           {/* 브라우저 상단 바 */}
           <div className="bg-muted flex h-9 items-center gap-1.5 px-4">
             <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
