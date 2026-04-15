@@ -12,7 +12,7 @@ const steps = [
   {
     number: 3,
     title: '뉴스레터 수신',
-    description: '매주 깔끔하게 정리된 다이제스트를 이메일로 받으세요.',
+    description: '매주 정리된 다이제스트를 이메일로 받으세요.',
   },
 ]
 
@@ -31,7 +31,7 @@ export function HowItWorksSection() {
 
           {steps.map((step) => (
             <div key={step.number} className="relative flex-1 text-center">
-              <div className="bg-primary text-primary-foreground mx-auto flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold">
+              <div className="bg-primary text-primary-foreground mx-auto flex h-10 w-10 items-center justify-center rounded-full text-base font-bold">
                 {step.number}
               </div>
               <h3 className="mt-4 text-base font-semibold">{step.title}</h3>
@@ -45,12 +45,8 @@ export function HowItWorksSection() {
         {/* 모바일: 수직 배치 */}
         <div className="mt-12 space-y-8 md:hidden">
           {steps.map((step, i) => (
-            <div key={step.number} className="relative flex items-start gap-4">
-              {/* 수직 점선 */}
-              {i < steps.length - 1 && (
-                <div className="border-muted-foreground/30 absolute top-12 bottom-0 left-6 border-l border-dashed" />
-              )}
-              <div className="bg-primary text-primary-foreground relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-bold">
+            <div key={step.number} className="flex items-start gap-4">
+              <div className="bg-primary text-primary-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold">
                 {step.number}
               </div>
               <div className="pt-1">
