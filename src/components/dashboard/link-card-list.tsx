@@ -78,7 +78,7 @@ export function LinkCardList() {
   const links = data?.pages.flatMap((page) => page.data) ?? []
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pt-4">
       <FilterTabs value={filter} onValueChange={setFilter} />
 
       {isLoading && <LinkCardSkeletonList />}
