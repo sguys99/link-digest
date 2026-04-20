@@ -1,5 +1,6 @@
 import { NextRequest, after } from "next/server";
 import { requireAuth } from "@/lib/api/auth";
+import { checkDailyLinkLimit } from "@/lib/api/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createLinkSchema, listLinksQuerySchema } from "@/lib/validators/link";
@@ -39,6 +40,26 @@ export async function POST(request: NextRequest) {
   const contentType = detectContentType(url);
 
   const supabase = await createClient();
+
+  // Rate limit: 최근 24시간 동안 DAILY_LINK_LIMIT 개 초과 시 차단
+  // 카운트 조회 실패 시에는 fail-open 으로 저장을 허용한다 (가용성 우선)
+  try {
+    const rate = await checkDailyLinkLimit(supabase, auth.userId);
+    if (!rate.allowed) {
+      return Response.json(
+        {
+          error: {
+            code: "RATE_LIMITED",
+            message: `하루 저장 한도(${rate.limit}개)를 초과했습니다. 잠시 후 다시 시도해주세요.`,
+          },
+        },
+        { status: 429 },
+      );
+    }
+  } catch (rateError) {
+    console.warn("[rate-limit] 카운트 조회 실패, 저장은 허용:", rateError);
+  }
+
   const { data, error } = await supabase
     .from("links")
     .insert({

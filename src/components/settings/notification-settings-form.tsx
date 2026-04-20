@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -43,8 +43,8 @@ export function NotificationSettingsForm({ defaultValues }: Props) {
     },
   });
 
-  const slackEnabled = form.watch("slack.enabled");
-  const telegramEnabled = form.watch("telegram.enabled");
+  const slackEnabled = useWatch({ control: form.control, name: "slack.enabled" });
+  const telegramEnabled = useWatch({ control: form.control, name: "telegram.enabled" });
 
   function onSubmit(data: NotificationSettingsInput) {
     mutate({ notificationSettings: data });

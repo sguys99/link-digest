@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -57,7 +57,7 @@ export function LlmSettingsForm({ defaultValues }: Props) {
     },
   });
 
-  const selectedProvider = form.watch("provider");
+  const selectedProvider = useWatch({ control: form.control, name: "provider" });
 
   function onSubmit(data: LlmSettingsInput) {
     mutate({ llmSettings: data });

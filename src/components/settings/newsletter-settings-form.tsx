@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -73,7 +73,7 @@ export function NewsletterSettingsForm({ defaultValues }: Props) {
     },
   });
 
-  const enabled = form.watch("enabled");
+  const enabled = useWatch({ control: form.control, name: "enabled" });
 
   function onSubmit(data: NewsletterSettingsInput) {
     mutate({ newsletterSettings: data });

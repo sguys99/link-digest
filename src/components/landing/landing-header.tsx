@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { LinkDigestLogo } from '@/components/logo'
 import { createClient } from '@/lib/supabase/client'
@@ -38,12 +39,12 @@ export function LandingHeader() {
           <span className="text-lg font-bold tracking-tight">LinkDigest</span>
         </div>
         <div className="flex items-center gap-5">
-          <a
+          <Link
             href="/announcements"
             className="text-muted-foreground hover:text-foreground text-sm transition-colors"
           >
             공지사항
-          </a>
+          </Link>
           <a
             href="https://github.com/sguys99/link-digest"
             target="_blank"

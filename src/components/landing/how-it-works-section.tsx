@@ -44,7 +44,7 @@ export function HowItWorksSection() {
 
         {/* 모바일: 수직 배치 */}
         <div className="mt-12 space-y-8 md:hidden">
-          {steps.map((step, i) => (
+          {steps.map((step) => (
             <div key={step.number} className="flex items-start gap-4">
               <div className="bg-primary text-primary-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold">
                 {step.number}

@@ -7,8 +7,11 @@ import { parseNotificationSettings, sendNotification } from "@/lib/notifications
 export const dynamic = "force-dynamic";
 
 /**
- * Vercel Cron에 의해 매시 정각 호출.
- * 현재 시간에 뉴스레터 발송이 예정된 사용자를 찾아 이메일을 발송한다.
+ * Vercel Cron에 의해 매일 UTC 자정에 호출 (vercel.json: "0 0 * * *").
+ * 각 사용자 타임존 기준 오늘 요일이 설정된 발송 요일과 일치하면 이메일을 발송한다.
+ *
+ * 주의: 주간(매일 1회) 실행 체계에서는 newsletter_settings.hour 필드는 매칭에 사용하지 않는다.
+ * 사용자가 UI에서 시각을 설정하더라도 발송은 UTC 자정 cron 호출 시점에 수행된다.
  */
 export async function GET(request: Request) {
   // CRON_SECRET 검증
@@ -59,7 +62,7 @@ export async function GET(request: Request) {
     if (!settings.enabled || !settings.email) return false;
 
     try {
-      return isMatchingTime(now, settings.timezone, settings.day_of_week, settings.hour);
+      return isMatchingDay(now, settings.timezone, settings.day_of_week);
     } catch {
       console.warn(
         `[newsletter-cron] 잘못된 타임존 (user=${user.id}): ${settings.timezone}`,
@@ -68,7 +71,7 @@ export async function GET(request: Request) {
     }
   });
 
-  console.log(`[newsletter-cron] 현재 시간: ${now.toISOString()}, 매칭 사용자: ${eligible.length}명`);
+  console.log(`[newsletter-cron] 현재 UTC: ${now.toISOString()}, 요일 매칭 사용자: ${eligible.length}명`);
 
   if (eligible.length === 0) {
     return NextResponse.json({ sent: 0, skipped: 0, failed: 0 });
@@ -159,16 +162,14 @@ export async function GET(request: Request) {
 
 /**
  * 현재 UTC 시간을 지정된 타임존으로 변환한 뒤,
- * 해당 로컬 시간의 요일과 시간이 설정값과 일치하는지 확인.
+ * 해당 로컬 요일이 설정된 발송 요일과 일치하는지 확인.
  *
  * dayOfWeek: 1(월) ~ 7(일) (ISO 형식)
- * hour: 0 ~ 23
  */
-function isMatchingTime(
+function isMatchingDay(
   now: Date,
   timezone: string,
   dayOfWeek: number,
-  hour: number,
 ): boolean {
   const localStr = now.toLocaleString("en-US", { timeZone: timezone });
   const local = new Date(localStr);
@@ -176,7 +177,6 @@ function isMatchingTime(
   // JS getDay(): 0=일 ~ 6=토 → ISO: 1=월 ~ 7=일
   const jsDay = local.getDay();
   const isoDay = jsDay === 0 ? 7 : jsDay;
-  const localHour = local.getHours();
 
-  return isoDay === dayOfWeek && localHour === hour;
+  return isoDay === dayOfWeek;
 }

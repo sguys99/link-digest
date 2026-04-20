@@ -44,6 +44,11 @@ export default function SharePage() {
           toast.success("링크가 저장되었습니다!");
         } else if (res.status === 409) {
           toast.info("이미 저장된 링크입니다.");
+        } else if (res.status === 429) {
+          const data = await res.json().catch(() => null);
+          toast.error(
+            data?.error?.message ?? "오늘 저장 한도를 초과했습니다.",
+          );
         } else {
           toast.error("링크 저장에 실패했습니다.");
         }
