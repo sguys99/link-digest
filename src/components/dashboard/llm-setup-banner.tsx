@@ -22,7 +22,9 @@ export function LlmSetupBanner() {
         <p className="flex-1 text-sm text-foreground">
           {isUsingFreeAi ? (
             <>
-              <span className="font-semibold">무료 AI 요약</span>이 기본 제공되고 있어요. 본인 API Key를 설정하면 더 많은 링크를 저장하고 품질을 높일 수 있습니다.
+              <span className="font-semibold">무료 AI 요약</span>이 기본 제공되고 있어요.
+              <br />
+              LLM API 키를 설정하면 품질을 높일 수 있습니다.
             </>
           ) : (
             <>
