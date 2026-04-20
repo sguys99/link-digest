@@ -28,9 +28,16 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "LinkDigest",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "LinkDigest",
+    template: "%s | LinkDigest",
+  },
   description: "AI 링크 요약 & 주간 뉴스레터 서비스",
+  applicationName: "LinkDigest",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -42,6 +49,19 @@ export const metadata: Metadata = {
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
     apple: "/icons/apple-touch-icon.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "LinkDigest",
+    title: "LinkDigest — AI 링크 요약 & 주간 뉴스레터",
+    description: "링크를 저장하면 AI가 정리합니다. 모바일 공유 한 번이면 저장 완료.",
+    url: "/",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LinkDigest — AI 링크 요약 & 주간 뉴스레터",
+    description: "링크를 저장하면 AI가 정리합니다.",
   },
 };
 
