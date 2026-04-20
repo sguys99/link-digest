@@ -30,6 +30,7 @@ export function isMaskedValue(value: string | null | undefined): boolean {
 /** DB row → SettingsResponse (마스킹 적용) */
 export function toSettingsResponse(
   row: Record<string, unknown>,
+  isUsingFreeAi: boolean,
 ): SettingsResponse {
   const llm = (row.llm_settings ?? {}) as Record<string, unknown>;
   const newsletter = (row.newsletter_settings ?? {}) as Record<string, unknown>;
@@ -65,6 +66,7 @@ export function toSettingsResponse(
         chatId: (telegram.chat_id as string) ?? null,
       },
     },
+    isUsingFreeAi,
   };
 }
 

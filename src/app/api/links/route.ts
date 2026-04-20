@@ -1,12 +1,17 @@
 import { NextRequest, after } from "next/server";
 import { requireAuth } from "@/lib/api/auth";
-import { checkDailyLinkLimit } from "@/lib/api/rate-limit";
+import {
+  checkDailyLinkLimit,
+  DAILY_LINK_LIMIT,
+  DAILY_LINK_LIMIT_FREE,
+} from "@/lib/api/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createLinkSchema, listLinksQuerySchema } from "@/lib/validators/link";
 import { detectContentType } from "@/lib/utils/url";
 import { toLinkResponse } from "@/lib/api/mappers";
 import { runSummaryPipeline } from "@/lib/summarize/pipeline";
+import { isUsingEnvFallback } from "@/lib/llm/config";
 
 // POST /api/links — 링크 저장
 export async function POST(request: NextRequest) {
@@ -41,10 +46,21 @@ export async function POST(request: NextRequest) {
 
   const supabase = await createClient();
 
-  // Rate limit: 최근 24시간 동안 DAILY_LINK_LIMIT 개 초과 시 차단
-  // 카운트 조회 실패 시에는 fail-open 으로 저장을 허용한다 (가용성 우선)
+  // Rate limit: 본인 키 사용자는 DAILY_LINK_LIMIT, 무료 fallback 사용자는 DAILY_LINK_LIMIT_FREE 적용
+  // 카운트/사용자 조회 실패 시에는 fail-open 으로 저장을 허용한다 (가용성 우선)
   try {
-    const rate = await checkDailyLinkLimit(supabase, auth.userId);
+    const { data: userRow } = await supabase
+      .from("users")
+      .select("llm_settings")
+      .eq("id", auth.userId)
+      .single();
+
+    const isFree = isUsingEnvFallback(
+      (userRow?.llm_settings as Record<string, unknown>) ?? null,
+    );
+    const limit = isFree ? DAILY_LINK_LIMIT_FREE : DAILY_LINK_LIMIT;
+
+    const rate = await checkDailyLinkLimit(supabase, auth.userId, limit);
     if (!rate.allowed) {
       return Response.json(
         {

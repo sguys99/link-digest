@@ -36,6 +36,8 @@ export type SettingsResponse = {
   llmSettings: LlmSettings;
   newsletterSettings: NewsletterSettings;
   notificationSettings: NotificationSettings;
+  // 본인 키 미설정 상태에서 환경변수 fallback(예: 무료 Gemini)으로 AI 요약이 동작 중인지 여부
+  isUsingFreeAi: boolean;
 };
 
 export type User = {
