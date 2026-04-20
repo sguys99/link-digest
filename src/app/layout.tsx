@@ -57,11 +57,20 @@ export const metadata: Metadata = {
     description: "링크를 저장하면 AI가 정리합니다. 모바일 공유 한 번이면 저장 완료.",
     url: "/",
     locale: "ko_KR",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 2038,
+        height: 1068,
+        alt: "LinkDigest — AI 링크 요약 & 주간 뉴스레터",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "LinkDigest — AI 링크 요약 & 주간 뉴스레터",
     description: "링크를 저장하면 AI가 정리합니다.",
+    images: ["/twitter-image.png"],
   },
 };
 
