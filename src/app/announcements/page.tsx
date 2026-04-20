@@ -36,20 +36,22 @@ export default async function AnnouncementsPage() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b bg-background px-4">
-        <Link
-          href={user ? "/dashboard" : "/"}
-          className="flex items-center gap-2"
-        >
-          <LinkDigestLogo size={24} />
-          <span className="text-lg font-bold tracking-tight">LinkDigest</span>
-        </Link>
-        <Link
-          href={user ? "/dashboard" : "/"}
-          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-        >
-          {user ? "대시보드" : "홈"}
-        </Link>
+      <header className="fixed inset-x-0 top-0 z-50 border-b bg-background">
+        <div className="mx-auto flex h-14 max-w-screen-sm items-center justify-between px-4">
+          <Link
+            href={user ? "/dashboard" : "/"}
+            className="flex items-center gap-2"
+          >
+            <LinkDigestLogo size={24} />
+            <span className="text-lg font-bold tracking-tight">LinkDigest</span>
+          </Link>
+          <Link
+            href={user ? "/dashboard" : "/"}
+            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+          >
+            {user ? "대시보드" : "홈"}
+          </Link>
+        </div>
       </header>
       <main className="mx-auto max-w-screen-sm px-4 pt-20 pb-12">
         <h1 className="mb-6 text-2xl font-bold">공지사항</h1>
