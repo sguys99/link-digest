@@ -1,4 +1,4 @@
-import { JSDOM } from "jsdom";
+import { parseHTML } from "linkedom";
 import { Readability } from "@mozilla/readability";
 import { extractMeta } from "./meta";
 import type { ScrapedContent } from "./types";
@@ -30,8 +30,12 @@ export async function scrapeArticle(url: string): Promise<ScrapedContent> {
   const html = await res.text();
 
   // Readability로 본문 추출
-  const dom = new JSDOM(html, { url });
-  const article = new Readability(dom.window.document).parse();
+  const { document } = parseHTML(html);
+  // Readability가 상대 URL을 올바르게 해석하도록 baseURI 설정
+  const base = document.createElement("base");
+  base.setAttribute("href", url);
+  document.head.appendChild(base);
+  const article = new Readability(document).parse();
 
   if (article?.textContent) {
     const body =

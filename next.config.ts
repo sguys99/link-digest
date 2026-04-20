@@ -13,7 +13,6 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['192.168.45.57'],
-  serverExternalPackages: ['jsdom'],
 };
 
 export default withSerwist(nextConfig);
