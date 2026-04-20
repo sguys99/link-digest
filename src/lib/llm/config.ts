@@ -56,3 +56,20 @@ export function resolveLlmConfig(
 
   return null;
 }
+
+/**
+ * 사용자 본인 키가 없고 환경변수 fallback(예: 무료 Gemini)으로 동작 중인지 판정.
+ * 배너 문구 분기 및 무료 사용자 rate limit 차등 적용에 사용.
+ */
+export function isUsingEnvFallback(
+  userSettings: Record<string, unknown> | null,
+): boolean {
+  const hasUserKey =
+    !!userSettings &&
+    typeof userSettings.provider === "string" &&
+    typeof userSettings.api_key === "string" &&
+    (userSettings.api_key as string).length > 0;
+
+  if (hasUserKey) return false;
+  return resolveLlmConfig(null) !== null;
+}

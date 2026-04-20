@@ -64,5 +64,21 @@
       "title": "title",
       "text": "text"
     }
-  }
+  },
+  "shortcuts": [
+    {
+      "name": "빠른 저장",
+      "short_name": "빠른 저장",
+      "description": "새 링크를 바로 저장합니다",
+      "url": "/dashboard?add=1",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    }
+  ]
 }

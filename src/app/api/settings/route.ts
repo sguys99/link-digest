@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/api/auth";
 import { createClient } from "@/lib/supabase/server";
 import { updateSettingsSchema } from "@/lib/validators/settings";
 import { toSettingsResponse, toSettingsDbPayload } from "@/lib/api/mappers";
+import { isUsingEnvFallback } from "@/lib/llm/config";
 
 // GET /api/settings — 현재 설정 조회
 export async function GET() {
@@ -23,7 +24,10 @@ export async function GET() {
     );
   }
 
-  return Response.json(toSettingsResponse(data));
+  const isFree = isUsingEnvFallback(
+    (data.llm_settings as Record<string, unknown>) ?? null,
+  );
+  return Response.json(toSettingsResponse(data, isFree));
 }
 
 // PUT /api/settings — 설정 업데이트
@@ -109,5 +113,8 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  return Response.json(toSettingsResponse(updated));
+  const isFree = isUsingEnvFallback(
+    (updated.llm_settings as Record<string, unknown>) ?? null,
+  );
+  return Response.json(toSettingsResponse(updated, isFree));
 }

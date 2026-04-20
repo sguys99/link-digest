@@ -12,11 +12,23 @@ import {
 } from '@/components/ui/sheet'
 import { AddLinkForm } from './add-link-form'
 
-export function AddLinkFab() {
-  const [open, setOpen] = useState(false)
+type AddLinkFabProps = {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function AddLinkFab({ open, onOpenChange }: AddLinkFabProps = {}) {
+  const isControlled = open !== undefined
+  const [internalOpen, setInternalOpen] = useState(false)
+  const actualOpen = isControlled ? open : internalOpen
+
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={actualOpen} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           size="icon"
