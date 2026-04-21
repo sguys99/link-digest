@@ -2,6 +2,7 @@ import { LandingHeader } from '@/components/landing/landing-header'
 import { HeroSection } from '@/components/landing/hero-section'
 import { FeaturesSection } from '@/components/landing/features-section'
 import { HowItWorksSection } from '@/components/landing/how-it-works-section'
+import { InstallGuideSection } from '@/components/landing/install-guide-section'
 import { AppMockupSection } from '@/components/landing/app-mockup-section'
 import { FinalCtaSection } from '@/components/landing/final-cta-section'
 import { LandingFooter } from '@/components/landing/landing-footer'
@@ -21,6 +22,10 @@ export default function Home() {
 
         <AnimateOnScroll>
           <HowItWorksSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <InstallGuideSection />
         </AnimateOnScroll>
 
         <AnimateOnScroll>
