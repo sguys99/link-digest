@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus, Loader2 } from 'lucide-react'
+import { Plus, Loader2, ClipboardPaste } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -27,6 +28,15 @@ export function AddLinkForm({
   autoFocus = false,
 }: AddLinkFormProps) {
   const addLink = useAddLink()
+  const [clipboardSupported, setClipboardSupported] = useState(false)
+
+  useEffect(() => {
+    setClipboardSupported(
+      typeof navigator !== 'undefined' &&
+        !!navigator.clipboard &&
+        typeof navigator.clipboard.readText === 'function',
+    )
+  }, [])
 
   const form = useForm<AddLinkFormInput>({
     resolver: zodResolver(addLinkFormSchema),
@@ -44,6 +54,18 @@ export function AddLinkForm({
         },
       },
     )
+  }
+
+  async function handlePaste() {
+    try {
+      const text = await navigator.clipboard.readText()
+      const trimmed = text.trim()
+      if (trimmed) {
+        form.setValue('url', trimmed, { shouldValidate: true })
+      }
+    } catch {
+      // 권한 거부 또는 빈 클립보드
+    }
   }
 
   const isInline = variant === 'inline'
@@ -64,15 +86,30 @@ export function AddLinkForm({
           render={({ field }) => (
             <FormItem className="flex-1">
               <FormControl>
-                <Input
-                  type="url"
-                  placeholder={
-                    isInline ? 'https://...' : '저장할 링크를 입력하세요'
-                  }
-                  autoFocus={autoFocus}
-                  autoComplete="off"
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    type="url"
+                    placeholder={
+                      isInline ? 'https://...' : '저장할 링크를 입력하세요'
+                    }
+                    autoFocus={autoFocus}
+                    autoComplete="off"
+                    className="pr-9"
+                    {...field}
+                  />
+                  {clipboardSupported && !field.value && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-xs"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground"
+                      onClick={handlePaste}
+                      aria-label="클립보드에서 붙여넣기"
+                    >
+                      <ClipboardPaste className="size-4" />
+                    </Button>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
