@@ -258,7 +258,7 @@
 
 ### 태스크
 
-- [ ] `src/app/(auth)/dashboard/page.tsx` — 페이지 타이틀 `text-[1.375rem] font-semibold tracking-tight`
+- [x] `src/app/(auth)/dashboard/page.tsx` — 페이지 타이틀 `text-[1.375rem] font-semibold tracking-tight`
 - [ ] `link-card.tsx` — 18px 카드/무그림자 상속 확인, 배지 3종 전부 무채색(안읽음 = 잉크 배지, 상태 = outline, YouTube = secondary), 읽음 opacity 처리 유지
 - [ ] `filter-tabs.tsx` — Phase 4의 tabs `pill` variant로 교체(인라인 오버라이드 제거)
 - [ ] `llm-setup-banner.tsx` / `clipboard-link-banner.tsx` / `share-target-hint.tsx` — parchment(`bg-muted`) 무채색 배너로 통일, 액션은 잉크 pill 또는 `text-link` 텍스트 링크

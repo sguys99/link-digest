@@ -40,7 +40,7 @@ export default async function DashboardPage() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="space-y-6 py-4">
-        <h1 className="text-lg font-bold">내 링크</h1>
+        <h1 className="text-[1.375rem] font-semibold tracking-tight">내 링크</h1>
         <LlmSetupBanner />
         <ClipboardLinkBanner />
         <AddLinkForm variant="inline" />
