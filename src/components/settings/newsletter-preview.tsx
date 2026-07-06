@@ -57,12 +57,16 @@ export function NewsletterPreview() {
             <p className="text-sm text-destructive py-8 text-center">{error}</p>
           )}
           {html && (
-            <iframe
-              srcDoc={html}
-              title="뉴스레터 미리보기"
-              className="w-full h-[60vh] border rounded-md"
-              sandbox=""
-            />
+            // iframe 자체 radius는 내용까지 클리핑되지 않을 수 있어 래퍼로 감싸 18px 라운드 처리.
+            // 이메일은 라이트 고정이라 다크 다이얼로그(#272729) 위에서 흰 프레임이 hairline border로 분리된다.
+            <div className="overflow-hidden rounded-2xl border">
+              <iframe
+                srcDoc={html}
+                title="뉴스레터 미리보기"
+                className="w-full h-[60vh]"
+                sandbox=""
+              />
+            </div>
           )}
         </div>
       </DialogContent>
