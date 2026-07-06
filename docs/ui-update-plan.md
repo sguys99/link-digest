@@ -148,20 +148,20 @@
 
 ### 태스크
 
-- [ ] `src/components/providers/theme-provider.tsx` 신규 — next-themes ThemeProvider 래퍼 (`attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`)
-- [ ] `src/app/layout.tsx` — body 직하에 ThemeProvider 래핑 (`<html suppressHydrationWarning>`은 이미 있음)
-- [ ] `src/components/settings/appearance-settings.tsx` 신규 — "화면 설정" Card: 시스템/라이트/다크 3-세그먼트(무채색 pill), `useTheme` + mounted 가드
-- [ ] `src/components/settings/settings-content.tsx` — 화면 설정 Card를 최상단에 추가
-- [ ] `src/app/layout.tsx` viewport — `themeColor` dark 값을 `#1d1d1f`로 변경 (media 기반이라 수동 토글과 OS 설정이 다르면 상태바 색 불일치 — 알려진 제약으로 주석 명기)
-- [ ] `src/components/ui/sonner.tsx` — useTheme가 실제 값을 받는지 확인 (코드 변경 불필요 예상)
+- [x] `src/components/providers/theme-provider.tsx` 신규 — next-themes ThemeProvider 래퍼 (`attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`)
+- [x] `src/app/layout.tsx` — body 직하에 ThemeProvider 래핑 (`<html suppressHydrationWarning>`은 이미 있음)
+- [x] `src/components/settings/appearance-settings.tsx` 신규 — "화면 설정" Card: 시스템/라이트/다크 3-세그먼트(무채색 pill), `useTheme` + 하이드레이션 가드(useSyncExternalStore — react-hooks set-state-in-effect 규칙 정합)
+- [x] `src/components/settings/settings-content.tsx` — 화면 설정 Card를 최상단에 추가
+- [x] `src/app/layout.tsx` viewport — `themeColor` dark 값을 `#1d1d1f`로 변경 (media 기반이라 수동 토글과 OS 설정이 다르면 상태바 색 불일치 — 알려진 제약으로 주석 명기)
+- [x] `src/components/ui/sonner.tsx` — useTheme가 실제 값을 받는지 확인 (이미 next-themes useTheme 사용 → ThemeProvider 배선으로 실제 값 수신, 코드 변경 불필요)
 
 **수정 파일:** `src/components/providers/theme-provider.tsx`(신규), `src/components/settings/appearance-settings.tsx`(신규), `src/app/layout.tsx`, `src/components/settings/settings-content.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 설정에서 다크 선택 → 전 화면 즉시 전환 + 새로고침 후 유지, 시스템 선택 → OS 설정 추종
-- [ ] 하이드레이션 경고 없음 (콘솔 확인)
+- [x] `npm run lint && npm run build` 0 error
+- [ ] 설정에서 다크 선택 → 전 화면 즉시 전환 + 새로고침 후 유지, 시스템 선택 → OS 설정 추종 — 코드 반영 완료, 브라우저 수동 확인 필요
+- [ ] 하이드레이션 경고 없음 (콘솔 확인) — suppressHydrationWarning + mounted 가드로 대응, 브라우저 수동 확인 필요
 
 ---
 
