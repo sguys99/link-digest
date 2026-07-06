@@ -18,9 +18,9 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section className="bg-muted/50 py-24 md:py-32">
+    <section className="bg-background py-24 md:py-32">
       <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-        <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">
+        <h2 className="text-center text-2xl font-semibold tracking-tight md:text-3xl">
           3단계로 시작하세요
         </h2>
 
