@@ -207,10 +207,10 @@
 
 ### 태스크
 
-- [ ] `src/components/layout/header.tsx` — `border-b bg-background` → `bg-background/80 backdrop-blur-xl border-b border-border/60` (frosted sub-nav 번안), 타이틀 `font-semibold tracking-tight`
-- [ ] `src/components/layout/bottom-nav.tsx` — `bg-background/85 backdrop-blur-xl`, 활성 탭은 잉크 강조(상단 2px 인디케이터 또는 아이콘 fill — 블루 금지)
-- [ ] `src/components/layout/site-header.tsx` 신규 — 비인증 공용 헤더(로고 + 우측 링크). `announcements/page.tsx`·`announcements/[id]/page.tsx`의 인라인 헤더를 이것으로 교체 (셸 불일치 해소 — (auth) 그룹 이동은 비인증 접근 요건 때문에 하지 않음)
-- [ ] `src/app/(auth)/layout.tsx` — main 패딩/최대폭 유지 확인, 배경 `bg-background`
+- [x] `src/components/layout/header.tsx` — `border-b bg-background` → `bg-background/80 backdrop-blur-xl border-b border-border/60` (frosted sub-nav 번안), 타이틀 `font-semibold tracking-tight`
+- [x] `src/components/layout/bottom-nav.tsx` — `bg-background/85 backdrop-blur-xl`, 활성 탭은 잉크 강조(상단 2px 인디케이터 또는 아이콘 fill — 블루 금지)
+- [x] `src/components/layout/site-header.tsx` 신규 — 비인증 공용 헤더(로고 + 우측 링크). `announcements/page.tsx`·`announcements/[id]/page.tsx`의 인라인 헤더를 이것으로 교체 (셸 불일치 해소 — (auth) 그룹 이동은 비인증 접근 요건 때문에 하지 않음)
+- [x] `src/app/(auth)/layout.tsx` — main 패딩/최대폭 유지 확인(`pt-14 pb-16`이 헤더 h-14·바텀내비 h-16과 정합), 배경 전역 body `bg-background` 상속 확인 — 변경 불필요
 - [ ] `src/components/landing/landing-header.tsx` — 스크롤 시 `bg-background/80 backdrop-blur-xl`로 통일, CTA pill 확인
 
 **수정 파일:** `src/components/layout/header.tsx`, `src/components/layout/bottom-nav.tsx`, `src/components/layout/site-header.tsx`(신규), `src/app/announcements/page.tsx`, `src/app/announcements/[id]/page.tsx`, `src/components/landing/landing-header.tsx`
