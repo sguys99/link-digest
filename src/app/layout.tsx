@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -69,8 +70,10 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className="antialiased">
-        <QueryProvider>{children}</QueryProvider>
-        <Toaster />
+        <ThemeProvider>
+          <QueryProvider>{children}</QueryProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
