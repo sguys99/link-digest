@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Loader2, ClipboardPaste } from 'lucide-react'
@@ -29,15 +29,15 @@ export function AddLinkForm({
   autoFocus = false,
 }: AddLinkFormProps) {
   const addLink = useAddLink()
-  const [clipboardSupported, setClipboardSupported] = useState(false)
-
-  useEffect(() => {
-    setClipboardSupported(
+  // 클립보드 지원 여부는 정적 브라우저 능력 — SSR에선 false, 마운트 후 실제 값으로 (하이드레이션 안전)
+  const clipboardSupported = useSyncExternalStore(
+    () => () => {},
+    () =>
       typeof navigator !== 'undefined' &&
-        !!navigator.clipboard &&
-        typeof navigator.clipboard.readText === 'function',
-    )
-  }, [])
+      !!navigator.clipboard &&
+      typeof navigator.clipboard.readText === 'function',
+    () => false,
+  )
 
   const form = useForm<AddLinkFormInput>({
     resolver: zodResolver(addLinkFormSchema),
