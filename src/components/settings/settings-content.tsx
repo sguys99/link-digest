@@ -33,7 +33,7 @@ export function SettingsContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">LLM 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">LLM 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <LlmSettingsForm defaultValues={data.llmSettings} />
@@ -42,7 +42,7 @@ export function SettingsContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">뉴스레터 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">뉴스레터 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <NewsletterSettingsForm defaultValues={data.newsletterSettings} />
@@ -54,7 +54,7 @@ export function SettingsContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">알림 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">알림 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <NotificationSettingsForm

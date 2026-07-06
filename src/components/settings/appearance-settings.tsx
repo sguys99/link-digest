@@ -40,7 +40,7 @@ export function AppearanceSettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">화면 설정</CardTitle>
+        <CardTitle className="text-base tracking-tight">화면 설정</CardTitle>
         <CardDescription>앱의 밝기 테마를 선택합니다.</CardDescription>
       </CardHeader>
       <CardContent>
