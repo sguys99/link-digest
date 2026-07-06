@@ -265,15 +265,15 @@
 - [x] `add-link-form.tsx` — inline URL 입력을 pill search-input(`h-11 rounded-full pl-5 pr-11`, paste 버튼 자리 확보 위해 px 대신 pl/pr 분리로 충돌 회피), 제출 버튼은 입력과 정렬되는 44px 잉크 원형(`size-11`, base pill 상속)
 - [x] `add-link-fab.tsx` — 잉크 원형 FAB: `shadow-lg` 제거(무그림자 원칙) + 엣지 정의용 hairline `border border-border`. 잉크/캔버스(다크 반전) 대비가 강해 축소판 그림자 불필요로 결정. Sheet content는 `rounded-t-2xl`(18px)+토큰 자동 상속 확인(변경 불필요)
 - [x] `empty-state.tsx`(`text-muted-foreground`), `link-card-skeleton.tsx`(Skeleton `bg-accent`) — 둘 다 토큰 기반으로 새 muted 톤 자동 적응 확인(accent #f5f5f7/#2a2a2c). 코드 변경 불필요
-- [ ] `src/app/(auth)/share/page.tsx`, `src/app/offline/page.tsx` — 타이포/pill 버튼 정합
+- [x] `src/app/(auth)/share/page.tsx`, `src/app/offline/page.tsx` — share 스피너를 얇은 stroke(`border-2` + `border-muted-foreground/20` 트랙)로 정제, offline "다시 시도"는 화면 주 액션이라 outline→잉크 default pill 승격(base pill 상속). 타이포는 토큰 기반 정합 확인
 - [ ] 라이트/다크 각각 무한스크롤·드롭다운 메뉴·삭제 다이얼로그 동작 확인
 
 **수정 파일:** `src/components/dashboard/*.tsx`(10개), `src/app/(auth)/share/page.tsx`, `src/app/offline/page.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 390px 다크모드에서 카드 #272729 / 배경 #1d1d1f 계층 확인, 배지에 유채색 없음
+- [x] `npm run lint && npm run build` 0 error
+- [ ] 390px 다크모드에서 카드 #272729 / 배경 #1d1d1f 계층 확인, 배지에 유채색 없음 — 코드 반영 완료(토큰 기반), 브라우저 수동 확인 필요
 
 ---
 
