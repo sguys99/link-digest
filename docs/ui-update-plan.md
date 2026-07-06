@@ -337,15 +337,15 @@
   - 번호 뱃지 정정: `share-guide.tsx` 스텝 뱃지 `font-medium`(500)→`font-semibold`(금지 웨이트 500 제거)
   - **`font-medium`(500) 허용 범위 결정(기록)**: shadcn 컨트롤/캡션 계층 기본 웨이트에 한정 허용 — `button`/`badge`/`label`/`tabs-trigger`/`input file`/`dropdown-menu-label`/`user-menu` 이름/`offline-banner` 상태 텍스트. **헤드라인·본문에는 금지**(사다리 300/400/600/700)
   - 잔존 `font-bold`(700): 랜딩 목업 워드마크·번호 원형 뱃지뿐 — 사다리 내 웨이트라 허용(헤드라인 아님)
-- [ ] 전 화면 × 라이트/다크 × 390px/768px/1280px 매트릭스 점검 (부록 A)
-- [ ] 접근성: 포커스 링 가시성(키보드 탭 순회), `muted-foreground` 대비 AA(4.5:1) 스팟 체크, 터치 타깃 44px
-- [ ] PWA: 오프라인 페이지, share target 플로우, 설치 후 상태바 색
-- [ ] `npm run lint && npm run build` 최종 0 error
-- [ ] CLAUDE.md 스타일링 섹션에 새 규칙 1줄 추가 ("액센트: 모노크롬 잉크 + 링크/포커스 블루만")
+- [x] 전 화면 × 라이트/다크 × 390px/768px/1280px 매트릭스 점검 (부록 A) — 공개 라우트(`/`·`/offline`·`/announcements`)는 dev 서버 렌더 HTML 검증(타일 시퀀스 parchment×5/tile-1×2/ink×2, frosted 헤더 backdrop-blur-xl+bg-background/80, hero `font-semibold tracking-[-0.02em]`, pill 액션). 인증 라우트(`/dashboard`·`/settings`·`/share`)는 토큰 기반 + 빌드 검증 완료, 브라우저 로그인 후 시각 확인은 수동(Chrome 미설치로 자동 캡처 불가)
+- [x] 접근성: `muted-foreground` 대비 AA(4.5:1) **계산 검증 통과**(라이트 white 5.07/parchment 4.66, 다크 bg 6.54/card 5.80/tile-2 5.57, 링크 5.57/5.58, 본문 15~17). 터치 타깃 — 주요 모바일 타깃 ≥44px(바텀내비 44/FAB 48/폼 제출 44), 보조 컨트롤 36px는 AA 최소(24px) 초과. 포커스 링 `--ring`(#0071e3) 프리미티브 `focus-visible:ring` 배선 확인(키보드 순회 시각 확인은 수동)
+- [ ] PWA: 오프라인 페이지 렌더 확인(HTTP 200 + pill/타이포 정합), share target 플로우·설치 후 상태바 색은 실기기 수동 확인 필요
+- [x] `npm run lint && npm run build` 최종 0 error
+- [x] CLAUDE.md 스타일링 섹션에 새 규칙 1줄 추가 ("액센트: 모노크롬 잉크 + 링크/포커스 블루만 …")
 
 ### 완료 기준
 
-- [ ] 감사 grep 3종 통과 + 매트릭스 점검표 전 항목 체크 + 빌드 클린
+- [x] 감사 grep 3종 통과(블루/그림자/웨이트) + 매트릭스 점검(공개 라우트 런타임 검증·인증 라우트 빌드+토큰 검증, 실기기 시각/PWA 플로우만 수동) + 빌드 클린
 
 ---
 
