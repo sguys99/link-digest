@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AppearanceSettings } from "./appearance-settings";
 import { LlmSettingsForm } from "./llm-settings-form";
 import { NewsletterSettingsForm } from "./newsletter-settings-form";
 import { NotificationSettingsForm } from "./notification-settings-form";
@@ -28,6 +29,8 @@ export function SettingsContent() {
 
   return (
     <div className="space-y-6">
+      <AppearanceSettings />
+
       <Card>
         <CardHeader>
           <CardTitle className="text-base">LLM 설정</CardTitle>
