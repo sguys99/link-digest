@@ -1,13 +1,10 @@
 import Link from 'next/link'
-import { UserMenu } from '@/components/auth/user-menu'
 
-type HeaderProps = {
-  email: string
-  displayName: string | null
-  avatarUrl: string | null
-}
-
-export function Header({ email, displayName, avatarUrl }: HeaderProps) {
+/**
+ * 헤더의 정적 껍데기. 우측 사용자 메뉴 슬롯은 children으로 받아
+ * <Suspense>로 감싼 프로필 조회를 흘려보낼 수 있게 한다(레이아웃 블로킹 방지).
+ */
+export function HeaderShell({ children }: { children: React.ReactNode }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b bg-background">
       <div className="mx-auto flex h-14 max-w-screen-sm items-center justify-between px-4">
@@ -21,11 +18,7 @@ export function Header({ email, displayName, avatarUrl }: HeaderProps) {
           >
             공지사항
           </Link>
-          <UserMenu
-            email={email}
-            displayName={displayName}
-            avatarUrl={avatarUrl}
-          />
+          {children}
         </div>
       </div>
     </header>

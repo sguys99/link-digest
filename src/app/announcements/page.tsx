@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { QueryProvider } from "@/components/providers/query-provider";
 import { AnnouncementList } from "@/components/announcements/announcement-list";
 import { toAnnouncementResponse } from "@/lib/api/mappers";
 import { LinkDigestLogo } from "@/components/logo";
@@ -55,9 +54,7 @@ export default async function AnnouncementsPage() {
       </header>
       <main className="mx-auto max-w-screen-sm px-4 pt-20 pb-12">
         <h1 className="mb-6 text-2xl font-bold">공지사항</h1>
-        <QueryProvider>
-          <AnnouncementList isAdmin={isAdmin} initialData={announcements} />
-        </QueryProvider>
+        <AnnouncementList isAdmin={isAdmin} initialData={announcements} />
       </main>
     </>
   );

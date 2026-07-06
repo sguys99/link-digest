@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { QueryProvider } from "@/components/providers/query-provider";
 import { toAnnouncementResponse } from "@/lib/api/mappers";
 import { LinkDigestLogo } from "@/components/logo";
 import { AnnouncementDetail } from "@/components/announcements/announcement-detail";
@@ -86,9 +85,7 @@ export default async function AnnouncementDetailPage({
         </div>
       </header>
       <main className="mx-auto max-w-screen-sm px-4 pt-20 pb-12">
-        <QueryProvider>
-          <AnnouncementDetail announcement={announcement} isAdmin={isAdmin} />
-        </QueryProvider>
+        <AnnouncementDetail announcement={announcement} isAdmin={isAdmin} />
       </main>
     </>
   );

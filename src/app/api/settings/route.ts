@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/api/auth";
 import { createClient } from "@/lib/supabase/server";
 import { updateSettingsSchema } from "@/lib/validators/settings";
 import { toSettingsResponse, toSettingsDbPayload } from "@/lib/api/mappers";
+import { getSettingsForUser } from "@/lib/api/settings-db";
 import { isUsingEnvFallback } from "@/lib/llm/config";
 
 // GET /api/settings — 현재 설정 조회
@@ -11,28 +12,21 @@ export async function GET() {
   if (!auth.success) return auth.response;
 
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("users")
-    .select("llm_settings, newsletter_settings, notification_settings")
-    .eq("id", auth.userId)
-    .single();
-
-  if (error || !data) {
+  try {
+    const result = await getSettingsForUser(supabase, auth.userId);
+    return Response.json(result);
+  } catch {
     return Response.json(
       { error: { code: "INTERNAL_ERROR", message: "설정 조회에 실패했습니다." } },
       { status: 500 },
     );
   }
-
-  const isFree = isUsingEnvFallback(
-    (data.llm_settings as Record<string, unknown>) ?? null,
-  );
-  return Response.json(toSettingsResponse(data, isFree));
 }
 
 // PUT /api/settings — 설정 업데이트
 export async function PUT(request: NextRequest) {
-  const auth = await requireAuth();
+  // 비밀값(LLM API 키, 웹훅/봇 토큰) 저장 경로 — 세션 폐기 즉시 반영을 위해 strict(getUser) 재검증
+  const auth = await requireAuth({ strict: true });
   if (!auth.success) return auth.response;
 
   let body: unknown;
