@@ -305,14 +305,14 @@
 
 ### 태스크
 
-- [ ] `src/lib/email/templates/newsletter.tsx` COLORS 재정의:
+- [x] `src/lib/email/templates/newsletter.tsx` COLORS 재정의:
   - `text: "#1d1d1f"`, `muted: "#6e6e73"`, `border: "#e0e0e0"`, `badgeBg: "#f5f5f7"`
-  - `accent: "#0066cc"` — **인라인 텍스트 링크에만** 사용
+  - `accent: "#0066cc"` — **인라인 텍스트 링크에만** 사용 (현재 본문에 인라인 링크 없어 COLORS에 예약 정의만, 렌더 출력 블루 0건)
   - 안읽음 배지 = 잉크 배경(#1d1d1f) + 흰 글자, `unreadBorder: "#1d1d1f"`
   - YouTube 배지 빨강 제거 → `#f5f5f7` / `#6e6e73` 무채색
-  - "원문 보기" 버튼 = 잉크 pill (`background:#1d1d1f; color:#fff; border-radius:9999px`)
-- [ ] 헤더/푸터 영역 parchment(#f5f5f7), 본문 폰트 스택 `Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif` (이메일은 웹폰트 로드 불가 → 시스템 폴백 전제)
-- [ ] `/api/newsletter/preview`로 렌더 확인 (설정 화면 미리보기 경유)
+  - "원문 보기" 버튼 = 잉크 pill (`background:#1d1d1f; color:#fff; border-radius:9999px`, font-weight 500→600)
+- [x] 헤더/푸터 영역 parchment(#f5f5f7, body 배경), 본문 폰트 스택 `Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif` (이메일은 웹폰트 로드 불가 → 시스템 폴백 전제)
+- [x] `/api/newsletter/preview`로 렌더 확인 — tsx 렌더 스크립트로 실제 출력 감사(블루/레드 0건, 잉크 배지·pill·parchment 확인). 브라우저 미리보기 수동 확인은 설정 화면 경유
 - [ ] `public/manifest.json` — `theme_color: "#ffffff"`(라이트 셸 기준), `background_color: "#ffffff"` 유지
 - [ ] `src/app/layout.tsx` viewport themeColor 최종값 확인 (light `#ffffff` / dark `#1d1d1f`)
 
