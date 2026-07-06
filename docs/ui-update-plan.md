@@ -217,9 +217,9 @@
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 390px에서 스크롤 시 헤더/바텀내비 블러 투과 확인 (라이트/다크 모두)
-- [ ] 공지 페이지 헤더가 랜딩과 동일한 룩
+- [x] `npm run lint && npm run build` 0 error
+- [ ] 390px에서 스크롤 시 헤더/바텀내비 블러 투과 확인 (라이트/다크 모두) — 코드 반영 완료, 브라우저 수동 확인 필요
+- [x] 공지 페이지 헤더가 랜딩과 동일한 룩 (SiteHeader frosted glass 공용화)
 
 ---
 
@@ -232,23 +232,23 @@
 
 ### 태스크
 
-- [ ] `src/app/page.tsx` — 섹션 순서 조정(app-mockup을 install-guide 앞으로) + 타일 배경 시퀀스 적용
-- [ ] `hero-section.tsx` — h1 `font-semibold tracking-[-0.02em]`, 리드문 17px/1.47, Badge를 무채색 텍스트 라벨로 대체, 폰 목업에만 `shadow-product`
-- [ ] `features-section.tsx` — parchment 타일(`bg-parchment`), 카드 hover translate 제거 → 그림자 없는 hairline 카드, 헤드라인 600
-- [ ] `how-it-works-section.tsx` — white 타일, 번호 뱃지 무채색(잉크 원형) 확인
-- [ ] `app-mockup-section.tsx` — 다크 타일(`bg-tile-1`, 라이트/다크 모드 공통) + 흰 텍스트, 브라우저 프레임에 `shadow-product`, 내부 인라인 링크는 #2997ff
-- [ ] `install-guide-section.tsx` — **iOS 팁 박스의 `blue-*` 하드코딩 제거** → `bg-muted` + `text-muted-foreground` 무채색 안내 박스, 탭은 무채색 pill
-- [ ] `final-cta-section.tsx` — 잉크 타일(`bg-ink`) + 흰색 pill CTA (LoginButton variant 확인)
-- [ ] `landing-footer.tsx` — `bg-parchment`, fine-print 12px `text-muted-foreground`
-- [ ] `mockup-phone-frame.tsx` / `mockup-card.tsx` — 새 토큰 정합(내부 카드 무채색) 확인
+- [x] `src/app/page.tsx` — 섹션 순서 조정(app-mockup을 install-guide 앞으로) + 타일 배경 시퀀스 적용
+- [x] `hero-section.tsx` — h1 `font-semibold tracking-[-0.02em]`, 리드문 17px/1.47, Badge를 무채색 텍스트 라벨로 대체, 폰 목업에만 `shadow-product`(프레임 파일에서 적용)
+- [x] `features-section.tsx` — parchment 타일(`bg-parchment`), 카드 hover translate 제거 → 그림자 없는 hairline 카드, 헤드라인 600
+- [x] `how-it-works-section.tsx` — white 타일, 번호 뱃지 무채색(잉크 원형) 확인
+- [x] `app-mockup-section.tsx` — 다크 타일(`bg-tile-1`, 라이트/다크 모드 공통) + 흰 텍스트, 브라우저 프레임에 `shadow-product`, 신호등 무채색화 (내부 실제 인라인 링크 없음 — #2997ff 규칙 대상 부재)
+- [x] `install-guide-section.tsx` — **iOS 팁 박스의 `blue-*` 하드코딩 제거** → `bg-muted` + `text-muted-foreground` 무채색 안내 박스, 탭은 무채색 pill
+- [x] `final-cta-section.tsx` — 잉크 타일(`bg-ink`) + 흰색 pill CTA (LoginButton variant/className 개방)
+- [x] `landing-footer.tsx` — `bg-parchment`, fine-print 12px `text-muted-foreground`
+- [x] `mockup-phone-frame.tsx`(shadow-2xl→shadow-product) / `mockup-card.tsx`(font-medium→font-semibold) — 새 토큰 정합(내부 카드 무채색) 확인
 
 **수정 파일:** `src/app/page.tsx`, `src/components/landing/*.tsx`(9개), `src/components/auth/login-button.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 390px/1280px에서 타일 리듬(색 전환 = 섹션 구분자) 확인, 그림자는 목업 이미지 2곳에만 존재
-- [ ] `grep -rn "blue-" src/components/landing/` 결과 0건
+- [x] `npm run lint && npm run build` 0 error
+- [ ] 390px/1280px에서 타일 리듬(색 전환 = 섹션 구분자) 확인 — 코드 반영 완료, 브라우저 수동 확인 필요 (그림자는 `shadow-product` 목업 2곳만 grep 확인됨)
+- [x] `grep -rn "blue-" src/components/landing/` 결과 0건
 
 ---
 
