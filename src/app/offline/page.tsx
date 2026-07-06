@@ -18,7 +18,6 @@ export default function OfflinePage() {
           </div>
           <Button
             onClick={() => window.location.reload()}
-            variant="outline"
             className="w-full"
           >
             다시 시도

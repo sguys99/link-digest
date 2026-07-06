@@ -2,24 +2,25 @@ import { MockupCards } from './mockup-card'
 
 export function AppMockupSection() {
   return (
-    <section className="py-24 md:py-32">
+    // 다크 타일(tile-1) — 라이트/다크 모드 공통, 색 전환 자체가 섹션 구분자
+    <section className="bg-tile-1 py-24 md:py-32">
       <div className="mx-auto max-w-screen-lg px-4 md:px-8">
         <div className="text-center">
-          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
             깔끔하게 정리되는 내 링크
           </h2>
-          <p className="text-muted-foreground mt-3 text-base">
+          <p className="mt-3 text-base text-white/70">
             저장한 링크를 한눈에. AI 요약으로 빠르게 핵심 파악.
           </p>
         </div>
 
-        {/* 브라우저 프레임 목업 */}
-        <div className="mx-auto mt-12 max-w-[85%] md:max-w-xl overflow-hidden rounded-xl border shadow-lg">
-          {/* 브라우저 상단 바 */}
+        {/* 브라우저 프레임 목업 — 시스템 유일 그림자 shadow-product */}
+        <div className="shadow-product mx-auto mt-12 max-w-[85%] overflow-hidden rounded-2xl border md:max-w-xl">
+          {/* 브라우저 상단 바 (신호등은 무채색 처리 — 유채색 금지) */}
           <div className="bg-muted flex h-9 items-center gap-1.5 px-4">
-            <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-            <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+            <div className="bg-foreground/20 h-2.5 w-2.5 rounded-full" />
+            <div className="bg-foreground/20 h-2.5 w-2.5 rounded-full" />
+            <div className="bg-foreground/20 h-2.5 w-2.5 rounded-full" />
             <div className="bg-background ml-3 flex-1 rounded-md px-3 py-1">
               <span className="text-muted-foreground text-[11px]">
                 linkdigest.app/dashboard
@@ -39,7 +40,7 @@ export function AppMockupSection() {
 
             {/* 필터 탭 */}
             <div className="mb-4 flex gap-2">
-              <span className="bg-primary text-primary-foreground rounded-md px-2.5 py-1 text-[11px] font-medium">
+              <span className="bg-primary text-primary-foreground rounded-full px-2.5 py-1 text-[11px] font-semibold">
                 전체
               </span>
               <span className="text-muted-foreground text-[11px] px-2.5 py-1">

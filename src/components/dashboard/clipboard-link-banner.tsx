@@ -35,11 +35,11 @@ export function ClipboardLinkBanner() {
   }
 
   return (
-    <div className="rounded-xl border bg-muted/50 p-4">
+    <div className="rounded-2xl border bg-muted p-4">
       <div className="flex items-start gap-3">
         <ClipboardList className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-foreground">
+          <p className="text-sm font-semibold text-foreground">
             클립보드에 링크가 있어요
           </p>
           <p className="mt-1 truncate text-xs text-muted-foreground">{url}</p>
@@ -54,7 +54,6 @@ export function ClipboardLinkBanner() {
             size="sm"
             onClick={handleSave}
             disabled={isDuplicate || addLink.isPending}
-            className="rounded-full"
           >
             {addLink.isPending ? (
               <Loader2 className="size-4 animate-spin" />

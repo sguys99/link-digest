@@ -61,7 +61,7 @@ export function AnnouncementDetail({
 
       <div className="mb-6">
         <div className="flex items-start justify-between gap-4">
-          <h1 className="text-2xl font-bold">{announcement.title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{announcement.title}</h1>
           {isAdmin && !announcement.isPublished && (
             <Badge variant="secondary">임시저장</Badge>
           )}

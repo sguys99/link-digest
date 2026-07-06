@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Loader2, ClipboardPaste } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   Form,
   FormControl,
@@ -28,15 +29,15 @@ export function AddLinkForm({
   autoFocus = false,
 }: AddLinkFormProps) {
   const addLink = useAddLink()
-  const [clipboardSupported, setClipboardSupported] = useState(false)
-
-  useEffect(() => {
-    setClipboardSupported(
+  // 클립보드 지원 여부는 정적 브라우저 능력 — SSR에선 false, 마운트 후 실제 값으로 (하이드레이션 안전)
+  const clipboardSupported = useSyncExternalStore(
+    () => () => {},
+    () =>
       typeof navigator !== 'undefined' &&
-        !!navigator.clipboard &&
-        typeof navigator.clipboard.readText === 'function',
-    )
-  }, [])
+      !!navigator.clipboard &&
+      typeof navigator.clipboard.readText === 'function',
+    () => false,
+  )
 
   const form = useForm<AddLinkFormInput>({
     resolver: zodResolver(addLinkFormSchema),
@@ -56,15 +57,24 @@ export function AddLinkForm({
     )
   }
 
+  // 클립보드를 못 읽는 경우(권한 거부, iOS 확인 취소, 빈 값) 입력창에 포커스를
+  // 주고 직접 길게 눌러 붙여넣도록 유도한다. 모바일은 native paste가 항상 동작한다.
+  function fallbackToManualPaste() {
+    form.setFocus('url')
+    toast('입력창을 길게 눌러 붙여넣어 주세요')
+  }
+
   async function handlePaste() {
     try {
       const text = await navigator.clipboard.readText()
       const trimmed = text.trim()
       if (trimmed) {
         form.setValue('url', trimmed, { shouldValidate: true })
+        return
       }
+      fallbackToManualPaste() // 빈 클립보드
     } catch {
-      // 권한 거부 또는 빈 클립보드
+      fallbackToManualPaste() // 권한 거부 / iOS 확인 취소 / 읽기 실패
     }
   }
 
@@ -89,12 +99,16 @@ export function AddLinkForm({
                 <div className="relative">
                   <Input
                     type="url"
+                    inputMode="url"
                     placeholder={
                       isInline ? 'https://...' : '저장할 링크를 입력하세요'
                     }
                     autoFocus={autoFocus}
                     autoComplete="off"
-                    className="pr-9"
+                    // inline은 pill search-input(44px), 그 외는 기본 8px 입력. paste 버튼 자리 확보
+                    className={
+                      isInline ? 'h-11 rounded-full pl-5 pr-11' : 'pr-9'
+                    }
                     {...field}
                   />
                   {clipboardSupported && !field.value && (
@@ -102,7 +116,7 @@ export function AddLinkForm({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground"
+                      className={`absolute top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground ${isInline ? 'right-2.5' : 'right-1.5'}`}
                       onClick={handlePaste}
                       aria-label="클립보드에서 붙여넣기"
                     >
@@ -118,7 +132,8 @@ export function AddLinkForm({
         <Button
           type="submit"
           disabled={addLink.isPending}
-          className={isInline ? 'rounded-full' : 'w-full'}
+          // inline은 입력(44px)과 정렬되는 잉크 원형 버튼, 그 외는 full-width 잉크 pill
+          className={isInline ? 'size-11 shrink-0' : 'w-full'}
         >
           {addLink.isPending ? (
             <Loader2 className="size-4 animate-spin" />

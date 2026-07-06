@@ -16,7 +16,7 @@ export function LlmSetupBanner() {
   const isUsingFreeAi = settings?.isUsingFreeAi ?? false
 
   return (
-    <div className="rounded-xl border bg-muted/50 p-4">
+    <div className="rounded-2xl border bg-muted p-4">
       <div className="flex items-center gap-3">
         <LinkDigestLogo size={28} className="shrink-0" />
         <p className="flex-1 text-sm text-foreground">
@@ -32,7 +32,7 @@ export function LlmSetupBanner() {
             </>
           )}
         </p>
-        <Button asChild size="sm" className="rounded-full">
+        <Button asChild size="sm">
           <Link href="/settings">설정하기</Link>
         </Button>
       </div>

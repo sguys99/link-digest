@@ -32,7 +32,9 @@ export function AddLinkFab({ open, onOpenChange }: AddLinkFabProps = {}) {
       <SheetTrigger asChild>
         <Button
           size="icon"
-          className="fixed bottom-20 right-4 z-40 size-12 rounded-full shadow-lg"
+          // 잉크 원형 FAB: 무그림자 원칙 → shadow-lg 제거, 엣지 정의용 hairline border만.
+          // 잉크/캔버스(다크 시 반전) 대비가 강해 축소판 그림자 불필요. rounded-full은 base 상속.
+          className="fixed bottom-20 right-4 z-40 size-12 border border-border"
         >
           <Plus className="size-5" />
           <span className="sr-only">링크 추가</span>

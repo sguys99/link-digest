@@ -1,27 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Noto_Sans_KR } from "next/font/google";
+// Pretendard: unicode-range 서브셋 분할로 실사용 글리프만 셀프 호스팅 로드 (PWA 오프라인 캐싱 정합)
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryProvider } from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const notoSansKR = Noto_Sans_KR({
-  variable: "--font-noto-kr",
-  subsets: ["latin"],
-});
-
 export const viewport: Viewport = {
+  // dark = 다크 배경 토큰(#1d1d1f)과 일치. media 기반이므로 설정 페이지에서
+  // 수동 토글한 테마와 OS 설정이 다르면 상태바 색이 불일치할 수 있다(알려진 제약).
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#1d1d1f" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -81,11 +71,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansKR.variable} antialiased`}
-      >
-        {children}
-        <Toaster />
+      <body className="antialiased">
+        <ThemeProvider>
+          <QueryProvider>{children}</QueryProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

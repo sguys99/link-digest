@@ -29,14 +29,14 @@ export function LandingHeader() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b bg-background/80 backdrop-blur-md'
+          ? 'border-b border-border/60 bg-background/80 backdrop-blur-xl'
           : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-14 max-w-screen-lg items-center justify-between px-4 md:px-8">
         <div className="flex items-center gap-2">
           <LinkDigestLogo size={28} />
-          <span className="text-lg font-bold tracking-tight">LinkDigest</span>
+          <span className="text-lg font-semibold tracking-tight">LinkDigest</span>
         </div>
         <div className="flex items-center gap-5">
           <Link

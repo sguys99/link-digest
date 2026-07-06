@@ -11,7 +11,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Skeleton } from '@/components/ui/skeleton'
 import { LogOut } from 'lucide-react'
+
+/** 프로필 스트리밍 중 표시할 아바타 자리 placeholder */
+export function UserMenuSkeleton() {
+  return <Skeleton className="h-8 w-8 rounded-full" />
+}
 
 type UserMenuProps = {
   email: string

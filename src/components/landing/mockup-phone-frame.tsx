@@ -6,7 +6,7 @@ type MockupPhoneFrameProps = {
 export function MockupPhoneFrame({ children, className = '' }: MockupPhoneFrameProps) {
   return (
     <div
-      className={`relative mx-auto w-[260px] rounded-[2.5rem] border-2 border-foreground/15 bg-background p-3 shadow-2xl ${className}`}
+      className={`relative mx-auto w-[260px] rounded-[2.5rem] border-2 border-foreground/15 bg-background p-3 shadow-product ${className}`}
     >
       {/* 노치 */}
       <div className="mx-auto mb-3 h-5 w-24 rounded-full bg-foreground/10" />

@@ -34,10 +34,11 @@ export function InstallBanner() {
 
   return (
     <div className="fixed bottom-20 left-4 right-4 z-50 mx-auto max-w-sm animate-in slide-in-from-bottom-4">
-      <div className="flex items-center gap-3 rounded-lg border bg-background p-3 shadow-lg">
-        <Download className="h-5 w-5 shrink-0 text-primary" />
+      {/* 플로팅 프롬프트지만 FAB와 동일 결정: 무그림자 원칙 → shadow 제거, 엣지 정의는 hairline border(18px) */}
+      <div className="flex items-center gap-3 rounded-2xl border bg-background p-3">
+        <Download className="h-5 w-5 shrink-0 text-foreground" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium">앱 설치하기</p>
+          <p className="text-sm font-semibold">앱 설치하기</p>
           <p className="text-xs text-muted-foreground">
             홈 화면에 추가하여 빠르게 접근하세요
           </p>

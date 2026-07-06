@@ -1,8 +1,10 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { Header } from '@/components/layout/header'
+import { getAuthClaims } from '@/lib/auth/dal'
+import { HeaderShell } from '@/components/layout/header'
+import { HeaderProfile } from '@/components/layout/header-profile'
+import { UserMenuSkeleton } from '@/components/auth/user-menu'
 import { BottomNav } from '@/components/layout/bottom-nav'
-import { QueryProvider } from '@/components/providers/query-provider'
 import { PwaInstallPrompt } from '@/components/pwa/pwa-install-prompt'
 import { OfflineBanner } from '@/components/pwa/offline-banner'
 
@@ -11,33 +13,26 @@ export default async function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  // 가벼운 인증 가드만 상단에서 await. 프로필 DB 조회는 HeaderProfile로 분리해
+  // Suspense로 스트리밍하므로 children(페이지) 렌더를 블로킹하지 않는다.
+  const claims = await getAuthClaims()
+  if (!claims) {
     redirect('/')
   }
 
-  // public.users에서 프로필 조회
-  const { data: profile } = await supabase
-    .from('users')
-    .select('display_name, avatar_url')
-    .eq('id', user.id)
-    .single()
-
   return (
-    <QueryProvider>
+    <>
       <OfflineBanner />
-      <Header
-        email={user.email ?? ''}
-        displayName={profile?.display_name ?? null}
-        avatarUrl={profile?.avatar_url ?? null}
-      />
+      <HeaderShell>
+        <Suspense fallback={<UserMenuSkeleton />}>
+          <HeaderProfile />
+        </Suspense>
+      </HeaderShell>
       <main className="mx-auto max-w-screen-sm px-4 pt-14 pb-16">
         {children}
       </main>
       <BottomNav />
       <PwaInstallPrompt />
-    </QueryProvider>
+    </>
   )
 }

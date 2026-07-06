@@ -55,7 +55,7 @@ export function NotificationSettingsForm({ defaultValues }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Slack */}
         <div className="space-y-3">
-          <h4 className="text-sm font-medium">Slack</h4>
+          <h4 className="text-sm font-semibold">Slack</h4>
 
           <FormField
             control={form.control}
@@ -98,7 +98,7 @@ export function NotificationSettingsForm({ defaultValues }: Props) {
 
         {/* Telegram */}
         <div className="space-y-3">
-          <h4 className="text-sm font-medium">Telegram</h4>
+          <h4 className="text-sm font-semibold">Telegram</h4>
 
           <FormField
             control={form.control}

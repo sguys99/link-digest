@@ -52,7 +52,7 @@ export function AnnouncementCard({
     <Card className="transition-colors hover:bg-accent/50">
       <Link href={`/announcements/${announcement.id}`} className="contents">
         <CardHeader>
-          <CardTitle className="text-lg">{announcement.title}</CardTitle>
+          <CardTitle className="text-lg tracking-tight">{announcement.title}</CardTitle>
           <CardDescription>
             {formattedDate}
             {isAdmin && !announcement.isPublished && (

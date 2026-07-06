@@ -2,8 +2,17 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import type { VariantProps } from 'class-variance-authority'
+import type { buttonVariants } from '@/components/ui/button'
 
-export function LoginButton() {
+type LoginButtonProps = {
+  // 잉크 타일 등 배경에 따라 흰 pill로 오버라이드할 수 있게 개방
+  variant?: VariantProps<typeof buttonVariants>['variant']
+  className?: string
+}
+
+export function LoginButton({ variant = 'outline', className }: LoginButtonProps) {
   const handleLogin = async () => {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
@@ -16,9 +25,9 @@ export function LoginButton() {
 
   return (
     <Button
-      variant="outline"
+      variant={variant}
       size="lg"
-      className="w-full gap-2"
+      className={cn('w-full gap-2', className)}
       onClick={handleLogin}
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24">

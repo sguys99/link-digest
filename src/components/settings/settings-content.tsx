@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AppearanceSettings } from "./appearance-settings";
 import { LlmSettingsForm } from "./llm-settings-form";
 import { NewsletterSettingsForm } from "./newsletter-settings-form";
 import { NotificationSettingsForm } from "./notification-settings-form";
@@ -28,9 +29,11 @@ export function SettingsContent() {
 
   return (
     <div className="space-y-6">
+      <AppearanceSettings />
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">LLM 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">LLM 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <LlmSettingsForm defaultValues={data.llmSettings} />
@@ -39,7 +42,7 @@ export function SettingsContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">뉴스레터 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">뉴스레터 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <NewsletterSettingsForm defaultValues={data.newsletterSettings} />
@@ -51,7 +54,7 @@ export function SettingsContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">알림 설정</CardTitle>
+          <CardTitle className="text-base tracking-tight">알림 설정</CardTitle>
         </CardHeader>
         <CardContent>
           <NotificationSettingsForm

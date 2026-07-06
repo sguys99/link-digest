@@ -10,12 +10,15 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createLinkSchema, listLinksQuerySchema } from "@/lib/validators/link";
 import { detectContentType } from "@/lib/utils/url";
 import { toLinkResponse } from "@/lib/api/mappers";
+import { listLinksForUser } from "@/lib/api/links-db";
 import { runSummaryPipeline } from "@/lib/summarize/pipeline";
 import { isUsingEnvFallback } from "@/lib/llm/config";
 
 // POST /api/links — 링크 저장
 export async function POST(request: NextRequest) {
-  const auth = await requireAuth();
+  // 저장 후 after()에서 service-role 요약 파이프라인(유료 LLM 호출)을 트리거하므로
+  // 비용 남용 방어를 위해 strict(getUser) 재검증.
+  const auth = await requireAuth({ strict: true });
   if (!auth.success) return auth.response;
 
   let body: unknown;
@@ -148,39 +151,19 @@ export async function GET(request: NextRequest) {
   const { cursor, limit, status, isRead } = parsed.data;
 
   const supabase = await createClient();
-  let query = supabase
-    .from("links")
-    .select("*")
-    .eq("user_id", auth.userId)
-    .order("created_at", { ascending: false })
-    .limit(limit + 1); // hasMore 판단용
 
-  if (status) {
-    query = query.eq("status", status);
-  }
-  if (isRead !== undefined) {
-    query = query.eq("is_read", isRead);
-  }
-  if (cursor) {
-    query = query.lt("created_at", cursor);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
+  try {
+    const result = await listLinksForUser(supabase, auth.userId, {
+      cursor,
+      limit,
+      status,
+      isRead,
+    });
+    return Response.json(result);
+  } catch {
     return Response.json(
       { error: { code: "INTERNAL_ERROR", message: "링크 목록 조회에 실패했습니다." } },
       { status: 500 }
     );
   }
-
-  const hasMore = data.length > limit;
-  const items = hasMore ? data.slice(0, limit) : data;
-  const nextCursor = hasMore ? items[items.length - 1]?.created_at ?? null : null;
-
-  return Response.json({
-    data: items.map(toLinkResponse),
-    nextCursor,
-    hasMore,
-  });
 }

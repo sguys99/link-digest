@@ -47,7 +47,7 @@ function MockupCardItem({ link }: { link: MockupCardData }) {
       className={`gap-2 py-2.5 ${link.isRead ? 'opacity-60' : ''}`}
     >
       <CardHeader className="px-3">
-        <CardTitle className="line-clamp-1 text-xs font-medium">
+        <CardTitle className="line-clamp-1 text-xs font-semibold">
           {link.title}
         </CardTitle>
       </CardHeader>

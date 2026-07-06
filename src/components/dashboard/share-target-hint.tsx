@@ -52,11 +52,11 @@ export function ShareTargetHint() {
   }
 
   return (
-    <div className="rounded-xl border bg-muted/50 p-4">
+    <div className="rounded-2xl border bg-muted p-4">
       <div className="flex items-start gap-3">
         <Share2 className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-foreground">
+          <p className="text-sm font-semibold text-foreground">
             더 빠르게 저장하는 팁
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
@@ -65,7 +65,7 @@ export function ShareTargetHint() {
           <Button
             size="sm"
             variant="outline"
-            className="mt-3 rounded-full"
+            className="mt-3"
             onClick={handleDismiss}
           >
             알겠어요

@@ -6,7 +6,8 @@ import { renderNewsletterHtml } from "@/lib/email/templates/newsletter";
 
 /** 인증된 사용자의 최근 7일 링크로 뉴스레터 미리보기 HTML을 반환한다. */
 export async function GET() {
-  const auth = await requireAuth();
+  // 뉴스레터 렌더는 비용이 드는 경로 — strict(getUser) 재검증.
+  const auth = await requireAuth({ strict: true });
   if (!auth.success) return auth.response;
 
   const supabase = await createClient();

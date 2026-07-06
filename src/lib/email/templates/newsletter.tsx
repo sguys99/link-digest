@@ -10,16 +10,19 @@ export type NewsletterData = {
 
 // --- 색상 상수 ---
 
+// 새 모노크롬 잉크 시스템 정합 (globals.css 토큰과 동일값). 이메일은 웹폰트/CSS변수 로드
+// 불가 → 인라인 리터럴 hex로 고정. accent(#0066cc)는 인라인 텍스트 링크 전용 유일 블루.
 const COLORS = {
   bg: "#ffffff",
-  text: "#1a1a1a",
-  muted: "#6b7280",
-  border: "#e5e7eb",
-  accent: "#2563eb",
-  accentLight: "#eff6ff",
-  badgeBg: "#f3f4f6",
-  unreadBorder: "#2563eb",
-  readBorder: "#e5e7eb",
+  parchment: "#f5f5f7",
+  ink: "#1d1d1f",
+  text: "#1d1d1f",
+  muted: "#6e6e73",
+  border: "#e0e0e0",
+  accent: "#0066cc",
+  badgeBg: "#f5f5f7",
+  unreadBorder: "#1d1d1f",
+  readBorder: "#e0e0e0",
 } as const;
 
 // --- 개별 링크 렌더링 ---
@@ -28,13 +31,15 @@ function renderLinkHtml(link: Link): string {
   const isUnread = !link.isRead;
   const borderColor = isUnread ? COLORS.unreadBorder : COLORS.readBorder;
   const opacity = isUnread ? "1" : "0.7";
+  // 안 읽음 = 잉크 배경 + 흰 글자(대시보드 default 배지와 동일), 읽음 = 무채색
   const badge = isUnread
-    ? `<span style="display:inline-block;padding:2px 8px;font-size:11px;font-weight:600;color:${COLORS.accent};background:${COLORS.accentLight};border-radius:9999px;">안 읽음</span>`
+    ? `<span style="display:inline-block;padding:2px 8px;font-size:11px;font-weight:600;color:#ffffff;background:${COLORS.ink};border-radius:9999px;">안 읽음</span>`
     : `<span style="display:inline-block;padding:2px 8px;font-size:11px;color:${COLORS.muted};background:${COLORS.badgeBg};border-radius:9999px;">읽음</span>`;
 
+  // YouTube 배지 무채색화 (빨강 제거 — 유채색 금지 원칙)
   const contentTypeBadge =
     link.contentType === "youtube"
-      ? `<span style="display:inline-block;padding:2px 8px;font-size:11px;color:#dc2626;background:#fef2f2;border-radius:9999px;margin-left:4px;">YouTube</span>`
+      ? `<span style="display:inline-block;padding:2px 8px;font-size:11px;color:${COLORS.muted};background:${COLORS.badgeBg};border-radius:9999px;margin-left:4px;">YouTube</span>`
       : "";
 
   const title = link.title ?? link.url;
@@ -62,7 +67,7 @@ function renderLinkHtml(link: Link): string {
       ${summary ? `<p style="margin:8px 0 0 0;font-size:13px;color:${COLORS.muted};line-height:1.5;">${escapeHtml(summary)}</p>` : ""}
       ${keyPointsHtml}
       <div style="margin-top:12px;">
-        <a href="${escapeHtml(link.url)}" style="display:inline-block;padding:6px 16px;font-size:13px;font-weight:500;color:${COLORS.accent};border:1px solid ${COLORS.accent};border-radius:6px;text-decoration:none;" target="_blank">
+        <a href="${escapeHtml(link.url)}" style="display:inline-block;padding:8px 18px;font-size:13px;font-weight:600;color:#ffffff;background:${COLORS.ink};border-radius:9999px;text-decoration:none;" target="_blank">
           원문 보기 →
         </a>
       </div>
@@ -78,7 +83,7 @@ export function renderNewsletterHtml(data: NewsletterData): string {
   const readCount = links.length - unreadCount;
 
   const statsHtml = `
-    <div style="background:${COLORS.accentLight};border-radius:8px;padding:12px 16px;margin-bottom:24px;font-size:13px;color:${COLORS.text};">
+    <div style="background:${COLORS.parchment};border-radius:8px;padding:12px 16px;margin-bottom:24px;font-size:13px;color:${COLORS.text};">
       총 <strong>${links.length}</strong>개 링크 · 안 읽음 <strong>${unreadCount}</strong>개 · 읽음 <strong>${readCount}</strong>개
     </div>`;
 
@@ -91,7 +96,7 @@ export function renderNewsletterHtml(data: NewsletterData): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LinkDigest 주간 뉴스레터</title>
 </head>
-<body style="margin:0;padding:0;background:${COLORS.badgeBg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+<body style="margin:0;padding:0;background:${COLORS.parchment};font-family:Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;">
   <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
     <!-- 헤더 -->
     <div style="text-align:center;margin-bottom:24px;">
