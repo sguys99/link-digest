@@ -7,9 +7,11 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 export const viewport: Viewport = {
+  // dark = 다크 배경 토큰(#1d1d1f)과 일치. media 기반이므로 설정 페이지에서
+  // 수동 토글한 테마와 OS 설정이 다르면 상태바 색이 불일치할 수 있다(알려진 제약).
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#1d1d1f" },
   ],
   width: "device-width",
   initialScale: 1,
