@@ -105,7 +105,10 @@ export function AddLinkForm({
                     }
                     autoFocus={autoFocus}
                     autoComplete="off"
-                    className="pr-9"
+                    // inline은 pill search-input(44px), 그 외는 기본 8px 입력. paste 버튼 자리 확보
+                    className={
+                      isInline ? 'h-11 rounded-full pl-5 pr-11' : 'pr-9'
+                    }
                     {...field}
                   />
                   {clipboardSupported && !field.value && (
@@ -113,7 +116,7 @@ export function AddLinkForm({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground"
+                      className={`absolute top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground ${isInline ? 'right-2.5' : 'right-1.5'}`}
                       onClick={handlePaste}
                       aria-label="클립보드에서 붙여넣기"
                     >
@@ -129,7 +132,8 @@ export function AddLinkForm({
         <Button
           type="submit"
           disabled={addLink.isPending}
-          className={isInline ? 'rounded-full' : 'w-full'}
+          // inline은 입력(44px)과 정렬되는 잉크 원형 버튼, 그 외는 full-width 잉크 pill
+          className={isInline ? 'size-11 shrink-0' : 'w-full'}
         >
           {addLink.isPending ? (
             <Loader2 className="size-4 animate-spin" />
