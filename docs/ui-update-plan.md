@@ -171,24 +171,31 @@
 
 ### 태스크
 
-- [ ] `src/components/ui/button.tsx` —
+- [x] `src/components/ui/button.tsx` —
   - base cva: `rounded-md` → `rounded-full`(pill), `active:scale-[0.97]` 추가, `transition-all` 유지
-  - `xs`/`icon-xs` 사이즈만 `rounded-lg`(compact utility 문법) 유지
+  - `xs`/`icon-xs` 사이즈만 compact utility 문법(8px) 유지 — 계획 본문의 `rounded-lg`(10px)는 부록 B 허용 radius(8px/18px/pill) 위반이므로 `rounded-md`(8px)로 정정. sm/lg는 개별 `rounded-md` 제거 → pill 상속
   - `outline` variant의 `shadow-xs` 제거
-- [ ] `src/components/ui/card.tsx` — `rounded-xl shadow-sm` → `rounded-2xl`(18px) + 그림자 제거, hairline `border` 유지
-- [ ] `src/components/ui/input.tsx` — radius 8px(`rounded-lg` 상당) 확인, 포커스 링이 새 블루 토큰을 타는지 확인
-- [ ] `src/components/ui/tabs.tsx` — `pill` variant 추가: trigger `data-[state=active]:bg-foreground data-[state=active]:text-background rounded-full` (FilterTabs의 인라인 오버라이드 흡수용)
-- [ ] `src/components/ui/badge.tsx` — 변경 없음 확인 (토큰 기반이라 자동 무채색화)
-- [ ] dialog/sheet/dropdown-menu/select — 그림자 **유지** 결정을 주석으로 명기 (오버레이 예외)
-- [ ] 전 화면 스모크 테스트: pill이 어색한 곳(카드 내 아이콘 버튼 등) 목록화 → 해당 화면 Phase에서 처리
+- [x] `src/components/ui/card.tsx` — `rounded-xl shadow-sm` → `rounded-2xl`(18px) + 그림자 제거, hairline `border` 유지
+- [x] `src/components/ui/input.tsx` — radius 8px(`rounded-md`) 확인, 포커스 링 `--ring`(#0071e3) 정상 확인. 추가로 `shadow-xs` 제거(무그림자 원칙 정합)
+- [x] `src/components/ui/tabs.tsx` — `pill` variant 추가: `group-data-[variant=pill]/tabs-list` 스코프로 trigger `rounded-full` + `data-[state=active]:bg-foreground data-[state=active]:text-background` (특이성이 기본 활성 스타일보다 높아 안정적). FilterTabs 인라인 오버라이드 제거하고 `variant="pill"`로 흡수
+- [x] `src/components/ui/badge.tsx` — 변경 없음 확인 (전 variant 토큰 기반 자동 무채색화, destructive 빨강만 예외)
+- [x] dialog/sheet/dropdown-menu/select/alert-dialog — 오버레이 content 그림자 **유지** 결정을 주석으로 명기. select **trigger**의 `shadow-xs`는 비-부유 컨트롤이므로 제거(input과 정합)
+- [x] 전 화면 스모크 테스트 (아래 목록화) → 해당 화면 Phase에서 처리
 
-**수정 파일:** `src/components/ui/button.tsx`, `src/components/ui/card.tsx`, `src/components/ui/tabs.tsx`, (확인만) `input.tsx`, `badge.tsx`
+**Phase 4-7 스모크 결과 (base `rounded-full` 파급으로 화면 Phase 점검 대상):**
+- `link-card.tsx` `size="icon"` 더보기 버튼 → 원형화. 카드 액션 아이콘 버튼 원형 허용 여부를 **Phase 7**에서 시각 확인
+- `share-target-hint.tsx` `size="icon"` 닫기(X) → 원형화. **Phase 7**
+- `add-link-fab.tsx` `size="icon"` size-12 FAB → 원형 + `shadow-lg`. FAB 그림자 결정을 **Phase 7**에서 처리
+- `add-link-form.tsx` `size="icon-xs"` → `rounded-md`(8px) 유지, 원형 아님 → 문제 없음
+- 텍스트 버튼 전반(outline/ghost/secondary) pill화 → 밀도 높은 카드/폼 내 어색 여부는 각 화면 Phase(6~8)에서 확인
+
+**수정 파일:** `src/components/ui/button.tsx`, `src/components/ui/card.tsx`, `src/components/ui/tabs.tsx`, `src/components/ui/input.tsx`, `src/components/ui/select.tsx`, (주석만) `dialog.tsx`/`sheet.tsx`/`dropdown-menu.tsx`/`alert-dialog.tsx`, `src/components/dashboard/filter-tabs.tsx`, (확인만) `badge.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 랜딩 "시작하기", 대시보드 FAB/폼 버튼이 pill + 누를 때 scale 축소
-- [ ] 카드에 그림자 없음, 18px 라운드
+- [x] `npm run lint && npm run build` 0 error
+- [x] 랜딩 CTA(sm/lg) pill + `active:scale-[0.97]` 렌더 확인(curl 검증), FAB/폼 버튼 pill은 Phase 7에서 시각 확인
+- [x] 카드 그림자 없음, 18px 라운드(`--radius-2xl`=×1.8=18px) 확인 · pill variant CSS 7개 규칙 컴파일 확인
 
 ---
 
