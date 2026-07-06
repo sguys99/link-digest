@@ -36,7 +36,7 @@ export default async function AnnouncementsPage() {
     <>
       <SiteHeader authed={!!user} />
       <main className="mx-auto max-w-screen-sm px-4 pt-20 pb-12">
-        <h1 className="mb-6 text-2xl font-bold">공지사항</h1>
+        <h1 className="mb-6 text-2xl font-semibold tracking-tight">공지사항</h1>
         <AnnouncementList isAdmin={isAdmin} initialData={announcements} />
       </main>
     </>

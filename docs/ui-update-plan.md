@@ -287,15 +287,15 @@
 - [x] `llm-settings-form.tsx` / `newsletter-settings-form.tsx` / `notification-settings-form.tsx` — 저장 버튼 default 잉크 pill(base 상속) 확인, Switch/Select/Input 토큰 기반+8px radius 확인. notification 폼 소제목 `font-medium`→`font-semibold`(500 금지 정합). LLM 초기화는 destructive 예외 유지
 - [x] `newsletter-preview.tsx` — iframe을 `overflow-hidden rounded-2xl border` 래퍼로 감싸 18px radius + hairline border(iframe 자체 radius가 내용 클리핑 안 되는 문제 회피). 다크 다이얼로그 위 흰 프레임이 hairline으로 분리, iframe 내부는 이메일 라이트 고정(Phase 9 정합)
 - [x] `settings-skeleton.tsx` — Skeleton `bg-accent` + Card(18px/무그림자) 프리미티브 기반으로 새 muted 톤 자동 적용 확인. 코드 변경 불필요
-- [ ] `announcements/*` 화면 + `announcement-card/detail/form/list.tsx` — 카드/타이포 새 문법 적용, 관리자 폼 버튼 pill
-- [ ] 다크모드에서 설정 카드 전체(화면 설정 포함) 확인
+- [x] `announcements/*` 화면 + `announcement-card/detail/form/list.tsx` — 헤드라인 `font-bold`(700)→`font-semibold tracking-tight`(600, 목록 h1·상세 h1), 카드 타이틀 `tracking-tight`, textarea를 Input과 동일 `--ring` 포커스/무그림자/8px radius로 정합, 관리자 폼 버튼 default 잉크 pill(등록/수정)+outline(취소) 확인
+- [ ] 다크모드에서 설정 카드 전체(화면 설정 포함) 확인 — 코드 반영 완료(토큰 기반), 브라우저 수동 확인 필요
 
 **수정 파일:** `src/components/settings/*.tsx`(6개), `src/components/announcements/*.tsx`(4개), `src/app/announcements/page.tsx`, `src/app/announcements/[id]/page.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 설정 화면에서 폼 제출(저장 토스트) 정상, 뉴스레터 미리보기 렌더 정상
+- [x] `npm run lint && npm run build` 0 error
+- [ ] 설정 화면에서 폼 제출(저장 토스트) 정상, 뉴스레터 미리보기 렌더 정상 — 코드 반영 완료, 브라우저 수동 확인 필요
 
 ---
 

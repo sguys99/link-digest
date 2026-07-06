@@ -103,7 +103,8 @@ export function AnnouncementForm({
                   <FormLabel>내용</FormLabel>
                   <FormControl>
                     <textarea
-                      className="border-input bg-background placeholder:text-muted-foreground flex min-h-[200px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      // Input 프리미티브와 동일한 필드/포커스 문법(--ring 블루, 무그림자, 8px radius)으로 정합
+                      className="flex min-h-[200px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30"
                       placeholder="공지사항 내용을 입력하세요"
                       {...field}
                     />
