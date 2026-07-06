@@ -60,7 +60,7 @@ export function LinkCard({ link, onToggleRead, onDelete }: LinkCardProps) {
         className={`gap-1.5 py-3 transition-opacity ${link.isRead ? 'opacity-60' : ''}`}
       >
         <CardHeader className="relative px-4 pr-12">
-          <CardTitle className="line-clamp-2 text-sm font-medium">
+          <CardTitle className="line-clamp-2 text-sm font-semibold">
             {link.title ?? link.url}
           </CardTitle>
           <CardAction className="absolute right-2 top-0">
