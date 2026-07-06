@@ -51,38 +51,46 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Light — DESIGN.md canvas/ink 톤 (모노크롬 잉크 + 최소 블루) */
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #1d1d1f; /* CTA = 잉크 pill */
+  --primary-foreground: #f5f5f7;
+  --secondary: #f5f5f7;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73; /* AA 대비 확보 */
+  --accent: #f5f5f7;
+  --accent-foreground: #1d1d1f;
+  --destructive: oklch(0.577 0.245 27.325); /* 삭제/에러 한정 예외 — 유지 */
+  --border: #e0e0e0;
+  --input: #e0e0e0;
+  --ring: #0071e3; /* 유일한 포커스 신호 = 블루 */
+  /* §2-2 커스텀 서피스 (모드 가변) — @theme inline에서 --color-link/--color-parchment로 참조 */
+  --link: #0066cc; /* 인라인 텍스트 링크 전용 — 시스템 유일 블루 */
+  --parchment: #f5f5f7;
+  /* chart: 미사용 — 무채색 램프로 정리 */
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+  /* radius 유지: 파생 --radius-md(×0.8)=8px, --radius-2xl(×1.8)=18px가
+     DESIGN.md rounded.sm(8px)/rounded.lg(18px)와 정렬됨 → 토큰 불변, 컴포넌트 클래스만 조정 */
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* sidebar: 미사용 — 배경·카드 톤에 맞춰 정리 */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1d1d1f;
+  --sidebar-primary: #1d1d1f;
+  --sidebar-primary-foreground: #f5f5f7;
+  --sidebar-accent: #f5f5f7;
+  --sidebar-accent-foreground: #1d1d1f;
+  --sidebar-border: #e0e0e0;
+  --sidebar-ring: #0071e3;
 }
 
 .dark {
