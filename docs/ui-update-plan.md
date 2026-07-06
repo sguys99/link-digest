@@ -332,7 +332,11 @@
 
 - [x] **블루 감사**: `grep -rn "blue-\|#2563eb\|#3b82f6" src/` → 0건 확인. `#0066cc|#2997ff|#0071e3`는 globals.css·이메일 템플릿(2파일)에만 존재 확인
 - [x] **그림자 감사**: `grep -rn "shadow-"` → 잔존 3건 정리(switch `shadow-xs` 제거·input 정합, tabs default variant `shadow-sm`→`shadow-none`, install-banner 플로팅 배너 `shadow-lg` 제거+18px hairline). 최종 오버레이(dialog/sheet/dropdown/select/sonner)와 `shadow-product` 외 0건
-- [ ] **웨이트 감사**: `grep -rn "font-bold\|font-medium" src/` 검토 — 헤드라인 `font-semibold` 통일 (버튼/캡션의 `font-medium` 허용 범위는 결정 후 본 문서에 기록)
+- [x] **웨이트 감사**: `grep -rn "font-bold\|font-medium" src/` 검토 완료.
+  - 헤드라인 정정: `settings/page.tsx` h1 `font-bold`→`font-semibold tracking-tight`(대시보드 타이틀 컨벤션 정합). 실제 페이지 헤드라인 중 `font-medium`(500) 사용 0건 확인
+  - 번호 뱃지 정정: `share-guide.tsx` 스텝 뱃지 `font-medium`(500)→`font-semibold`(금지 웨이트 500 제거)
+  - **`font-medium`(500) 허용 범위 결정(기록)**: shadcn 컨트롤/캡션 계층 기본 웨이트에 한정 허용 — `button`/`badge`/`label`/`tabs-trigger`/`input file`/`dropdown-menu-label`/`user-menu` 이름/`offline-banner` 상태 텍스트. **헤드라인·본문에는 금지**(사다리 300/400/600/700)
+  - 잔존 `font-bold`(700): 랜딩 목업 워드마크·번호 원형 뱃지뿐 — 사다리 내 웨이트라 허용(헤드라인 아님)
 - [ ] 전 화면 × 라이트/다크 × 390px/768px/1280px 매트릭스 점검 (부록 A)
 - [ ] 접근성: 포커스 링 가시성(키보드 탭 순회), `muted-foreground` 대비 AA(4.5:1) 스팟 체크, 터치 타깃 44px
 - [ ] PWA: 오프라인 페이지, share target 플로우, 설치 후 상태바 색

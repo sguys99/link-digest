@@ -45,7 +45,7 @@ export function ShareGuide() {
         </DialogHeader>
         <ol className="space-y-4 text-sm">
           <li className="flex items-start gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
               1
             </span>
             <div className="flex items-center gap-1.5">
@@ -55,7 +55,7 @@ export function ShareGuide() {
             </div>
           </li>
           <li className="flex items-start gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
               2
             </span>
             <div className="flex items-center gap-1.5">
@@ -65,7 +65,7 @@ export function ShareGuide() {
             </div>
           </li>
           <li className="flex items-start gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
               3
             </span>
             <div>
