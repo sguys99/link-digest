@@ -104,18 +104,18 @@
 
 ### 태스크
 
-- [ ] `npm install pretendard`
-- [ ] `src/app/layout.tsx` — `import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css"` 추가, `Geist`/`Geist_Mono`/`Noto_Sans_KR` next/font 로더와 body의 폰트 변수 클래스 제거
-- [ ] `src/app/globals.css` — `@theme inline`의 `--font-sans`를 `"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`로 교체, `--font-mono`는 `ui-monospace, SFMono-Regular, monospace`로 단순화
-- [ ] 웨이트 사용 원칙 주석 추가 (300/400/600/700 — 500 금지)
+- [x] `npm install pretendard`
+- [x] `src/app/layout.tsx` — `import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css"` 추가, `Geist`/`Geist_Mono`/`Noto_Sans_KR` next/font 로더와 body의 폰트 변수 클래스 제거
+- [x] `src/app/globals.css` — `@theme inline`의 `--font-sans`를 `"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`로 교체, `--font-mono`는 `ui-monospace, SFMono-Regular, monospace`로 단순화
+- [x] 웨이트 사용 원칙 주석 추가 (300/400/600/700 — 500 금지)
 
 **수정 파일:** `src/app/layout.tsx`, `src/app/globals.css`, `package.json`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] dev 서버에서 한글/영문/숫자가 모두 Pretendard로 렌더링 (DevTools → Rendered Fonts에서 "Pretendard Variable" 확인)
-- [ ] 네트워크 탭에서 woff2 서브셋 분할 로드 확인
+- [x] `npm run lint && npm run build` 0 error
+- [ ] dev 서버에서 한글/영문/숫자가 모두 Pretendard로 렌더링 (DevTools → Rendered Fonts에서 "Pretendard Variable" 확인) — 코드 반영 완료, 브라우저 수동 확인 필요
+- [ ] 네트워크 탭에서 woff2 서브셋 분할 로드 확인 — 코드 반영 완료, 브라우저 수동 확인 필요
 
 ---
 
@@ -125,20 +125,20 @@
 
 ### 태스크
 
-- [ ] `src/app/globals.css` `:root` — §2-1 Light 열 값으로 교체
-- [ ] `.dark` 블록 — §2-1 Dark 열 값으로 교체 (미사용 sidebar/chart 토큰은 배경·카드 톤에 맞춰 일괄 정리)
-- [ ] `@theme inline`에 §2-2 신규 토큰 등록 (`--color-link`, `--color-parchment`, `--color-tile-1/2/3`, `--color-ink`, `--shadow-product`)
-- [ ] `--radius: 0.625rem` 유지 확인 (파생 스케일 정렬 근거를 주석으로 명기)
-- [ ] 전역 포커스 스타일 확인 — 새 `--ring` 블루가 유일한 포커스 신호로 동작
+- [x] `src/app/globals.css` `:root` — §2-1 Light 열 값으로 교체
+- [x] `.dark` 블록 — §2-1 Dark 열 값으로 교체 (미사용 sidebar/chart 토큰은 배경·카드 톤에 맞춰 일괄 정리)
+- [x] `@theme inline`에 §2-2 신규 토큰 등록 (`--color-link`, `--color-parchment`, `--color-tile-1/2/3`, `--color-ink`, `--shadow-product`)
+- [x] `--radius: 0.625rem` 유지 확인 (파생 스케일 정렬 근거를 주석으로 명기)
+- [x] 전역 포커스 스타일 확인 — 새 `--ring` 블루가 유일한 포커스 신호로 동작 (globals `outline-ring/50` + input `ring-ring/50`, 하드코딩 블루 0건)
 
 **수정 파일:** `src/app/globals.css`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 라이트 모드: CTA 버튼 잉크(#1d1d1f), muted 배경 parchment(#f5f5f7)
-- [ ] DevTools에서 `<html class="dark">` 수동 부여 시 배경 #1d1d1f / 카드 #272729 확인 (배선은 Phase 3)
-- [ ] 입력 포커스 시 링이 #0071e3 블루
+- [x] `npm run lint && npm run build` 0 error
+- [x] 라이트 모드: CTA 버튼 잉크(#1d1d1f), muted 배경 parchment(#f5f5f7) — 빌드 CSS에서 `--primary:#1d1d1f`/`--muted:#f5f5f7` 확인
+- [x] DevTools에서 `<html class="dark">` 수동 부여 시 배경 #1d1d1f / 카드 #272729 확인 (배선은 Phase 3) — 빌드 CSS 토큰값 확인
+- [x] 입력 포커스 시 링이 #0071e3 블루 — `--ring:#0071e3` 확인
 
 ---
 
