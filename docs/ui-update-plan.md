@@ -313,15 +313,15 @@
   - "원문 보기" 버튼 = 잉크 pill (`background:#1d1d1f; color:#fff; border-radius:9999px`, font-weight 500→600)
 - [x] 헤더/푸터 영역 parchment(#f5f5f7, body 배경), 본문 폰트 스택 `Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif` (이메일은 웹폰트 로드 불가 → 시스템 폴백 전제)
 - [x] `/api/newsletter/preview`로 렌더 확인 — tsx 렌더 스크립트로 실제 출력 감사(블루/레드 0건, 잉크 배지·pill·parchment 확인). 브라우저 미리보기 수동 확인은 설정 화면 경유
-- [ ] `public/manifest.json` — `theme_color: "#ffffff"`(라이트 셸 기준), `background_color: "#ffffff"` 유지
-- [ ] `src/app/layout.tsx` viewport themeColor 최종값 확인 (light `#ffffff` / dark `#1d1d1f`)
+- [x] `public/manifest.json` — `theme_color: "#000000"→"#ffffff"`(라이트 셸 기준), `background_color: "#ffffff"` 유지
+- [x] `src/app/layout.tsx` viewport themeColor 최종값 확인 (light `#ffffff` / dark `#1d1d1f` — Phase 3에서 이미 설정 완료, 변경 불필요)
 
 **수정 파일:** `src/lib/email/templates/newsletter.tsx`, `public/manifest.json`, `src/app/layout.tsx`
 
 ### 완료 기준
 
-- [ ] `npm run lint && npm run build` 0 error
-- [ ] 뉴스레터 미리보기에서 블루가 인라인 링크 외에 없음
+- [x] `npm run lint && npm run build` 0 error
+- [x] 뉴스레터 미리보기에서 블루가 인라인 링크 외에 없음 — tsx 렌더 감사로 출력 블루 0건 확인
 - [ ] Android Chrome에서 설치 배너/스플래시 색 확인 (수동)
 
 ---
