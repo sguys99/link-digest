@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Loader2, ClipboardPaste } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   Form,
   FormControl,
@@ -56,15 +57,24 @@ export function AddLinkForm({
     )
   }
 
+  // 클립보드를 못 읽는 경우(권한 거부, iOS 확인 취소, 빈 값) 입력창에 포커스를
+  // 주고 직접 길게 눌러 붙여넣도록 유도한다. 모바일은 native paste가 항상 동작한다.
+  function fallbackToManualPaste() {
+    form.setFocus('url')
+    toast('입력창을 길게 눌러 붙여넣어 주세요')
+  }
+
   async function handlePaste() {
     try {
       const text = await navigator.clipboard.readText()
       const trimmed = text.trim()
       if (trimmed) {
         form.setValue('url', trimmed, { shouldValidate: true })
+        return
       }
+      fallbackToManualPaste() // 빈 클립보드
     } catch {
-      // 권한 거부 또는 빈 클립보드
+      fallbackToManualPaste() // 권한 거부 / iOS 확인 취소 / 읽기 실패
     }
   }
 
@@ -89,6 +99,7 @@ export function AddLinkForm({
                 <div className="relative">
                   <Input
                     type="url"
+                    inputMode="url"
                     placeholder={
                       isInline ? 'https://...' : '저장할 링크를 입력하세요'
                     }
