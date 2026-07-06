@@ -51,7 +51,7 @@ function StepCard({
   description: string
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border p-4">
+    <div className="flex items-start gap-3 rounded-2xl border bg-background p-4">
       <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
         {number}
       </div>
@@ -65,13 +65,14 @@ function StepCard({
 
 export function InstallGuideSection() {
   return (
-    <section className="py-24 md:py-32">
+    <section className="bg-parchment py-24 md:py-32">
       <div className="mx-auto max-w-screen-lg px-4 md:px-8">
         <div className="text-center">
-          <span className="inline-block rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+          {/* 무채색 텍스트 라벨 (배지 유채색 금지) */}
+          <p className="text-muted-foreground text-[13px] font-semibold tracking-tight">
             앱처럼 사용하기
-          </span>
-          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
             홈 화면에 추가하면
             <br />
             더 빠르게
@@ -83,7 +84,7 @@ export function InstallGuideSection() {
 
         <div className="mx-auto mt-10 max-w-sm">
           <Tabs defaultValue="android">
-            <TabsList className="w-full">
+            <TabsList variant="pill" className="w-full">
               <TabsTrigger value="android">Android</TabsTrigger>
               <TabsTrigger value="ios">iOS</TabsTrigger>
             </TabsList>
@@ -98,9 +99,10 @@ export function InstallGuideSection() {
               {iosSteps.map((step) => (
                 <StepCard key={step.number} {...step} />
               ))}
-              <div className="flex gap-2 rounded-xl border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
-                <Lightbulb className="mt-0.5 size-4 shrink-0 text-blue-600 dark:text-blue-400" />
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+              {/* 무채색 안내 박스 (blue 하드코딩 제거) */}
+              <div className="bg-muted flex gap-2 rounded-2xl border p-3">
+                <Lightbulb className="text-muted-foreground mt-0.5 size-4 shrink-0" />
+                <p className="text-muted-foreground text-xs">
                   iOS에서는 앱 안에서 직접 링크를 붙여넣거나, + 버튼으로
                   추가할 수 있어요.
                 </p>
