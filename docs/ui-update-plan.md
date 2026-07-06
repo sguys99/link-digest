@@ -260,7 +260,7 @@
 
 - [x] `src/app/(auth)/dashboard/page.tsx` — 페이지 타이틀 `text-[1.375rem] font-semibold tracking-tight`
 - [x] `link-card.tsx` — 18px 카드/무그림자 상속 확인, 배지 3종 전부 무채색(안읽음 = 잉크 default 배지, 상태 = outline, YouTube = secondary), 읽음 opacity 유지. CardTitle `font-medium`→`font-semibold`(500 금지 정합)
-- [ ] `filter-tabs.tsx` — Phase 4의 tabs `pill` variant로 교체(인라인 오버라이드 제거)
+- [x] `filter-tabs.tsx` — Phase 4의 tabs `pill` variant로 교체 완료 확인(인라인 오버라이드 없음, `variant="pill"` 흡수됨)
 - [ ] `llm-setup-banner.tsx` / `clipboard-link-banner.tsx` / `share-target-hint.tsx` — parchment(`bg-muted`) 무채색 배너로 통일, 액션은 잉크 pill 또는 `text-link` 텍스트 링크
 - [ ] `add-link-form.tsx` — inline URL 입력을 pill search-input 문법으로(`rounded-full h-11 px-5`), 제출 버튼 잉크 pill
 - [ ] `add-link-fab.tsx` — 잉크 원형 FAB(기본 무그림자 + border, 가시성 부족 시에만 축소판 그림자 허용 여부 결정), Sheet 내부 새 토큰 확인
