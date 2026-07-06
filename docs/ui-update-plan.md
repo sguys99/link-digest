@@ -263,7 +263,7 @@
 - [x] `filter-tabs.tsx` — Phase 4의 tabs `pill` variant로 교체 완료 확인(인라인 오버라이드 없음, `variant="pill"` 흡수됨)
 - [x] `llm-setup-banner.tsx` / `clipboard-link-banner.tsx` / `share-target-hint.tsx` — `rounded-2xl`(18px, 부록 B 정합) + `bg-muted` parchment 무채색 배너로 통일, 액션은 잉크 default pill(base pill이라 중복 `rounded-full` 제거), 배너 제목 `font-medium`→`font-semibold`(500 금지)
 - [x] `add-link-form.tsx` — inline URL 입력을 pill search-input(`h-11 rounded-full pl-5 pr-11`, paste 버튼 자리 확보 위해 px 대신 pl/pr 분리로 충돌 회피), 제출 버튼은 입력과 정렬되는 44px 잉크 원형(`size-11`, base pill 상속)
-- [ ] `add-link-fab.tsx` — 잉크 원형 FAB(기본 무그림자 + border, 가시성 부족 시에만 축소판 그림자 허용 여부 결정), Sheet 내부 새 토큰 확인
+- [x] `add-link-fab.tsx` — 잉크 원형 FAB: `shadow-lg` 제거(무그림자 원칙) + 엣지 정의용 hairline `border border-border`. 잉크/캔버스(다크 반전) 대비가 강해 축소판 그림자 불필요로 결정. Sheet content는 `rounded-t-2xl`(18px)+토큰 자동 상속 확인(변경 불필요)
 - [ ] `empty-state.tsx`, `link-card-skeleton.tsx` — 새 muted 톤 확인
 - [ ] `src/app/(auth)/share/page.tsx`, `src/app/offline/page.tsx` — 타이포/pill 버튼 정합
 - [ ] 라이트/다크 각각 무한스크롤·드롭다운 메뉴·삭제 다이얼로그 동작 확인
