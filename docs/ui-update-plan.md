@@ -284,7 +284,7 @@
 ### 태스크
 
 - [x] `settings-content.tsx` — Card 타이틀 위계(`text-base tracking-tight`, CardTitle 기본 `font-semibold` 상속) 네 카드(화면/LLM/뉴스레터/알림) 통일, `space-y-6` 여백 리듬 유지. appearance-settings 타이틀도 동일 정합
-- [ ] `llm-settings-form.tsx` / `newsletter-settings-form.tsx` / `notification-settings-form.tsx` — 저장 버튼 잉크 pill, Switch/Select 새 토큰 확인, 폼 입력 8px radius 유지
+- [x] `llm-settings-form.tsx` / `newsletter-settings-form.tsx` / `notification-settings-form.tsx` — 저장 버튼 default 잉크 pill(base 상속) 확인, Switch/Select/Input 토큰 기반+8px radius 확인. notification 폼 소제목 `font-medium`→`font-semibold`(500 금지 정합). LLM 초기화는 destructive 예외 유지
 - [ ] `newsletter-preview.tsx` — iframe 프레임을 hairline border + 18px radius로, 다크모드에서 프레임 대비 확인 (iframe 내부는 이메일 라이트 고정 — Phase 9와 정합)
 - [ ] `settings-skeleton.tsx` — 새 muted 톤
 - [ ] `announcements/*` 화면 + `announcement-card/detail/form/list.tsx` — 카드/타이포 새 문법 적용, 관리자 폼 버튼 pill
